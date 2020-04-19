@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="413, 叶子">
+    <meta name="keywords" content="线程, 叶子">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>413 | 叶子</title>
+    <title>线程 | 叶子</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -307,12 +307,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">413</h1>
+                    <h1 class="description center-align post-title">线程</h1>
                 </div>
             </div>
         </div>
@@ -437,8 +437,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95/">
-                                <span class="chip bg-color">错误记录</span>
+                            <a href="/tags/%E7%BA%BF%E7%A8%8B/">
+                                <span class="chip bg-color">线程</span>
                             </a>
                         
                     </div>
@@ -453,7 +453,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-04-18
+                    2020-04-19
                 </div>
                 
 
@@ -469,11 +469,40 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><strong>问题如下：</strong></p>
-<p><img src="https://img-blog.csdnimg.cn/20200409173255195.png" alt></p>
-<hr>
-<p><strong>原因</strong>:413 请求体过大，Nginx支持上传大小也是有限制的，请求体<br>超过了Nginx的默认大小</p>
-<p><strong>解决方法:</strong> 在Nginx配置文件中添加大小设置<img src="https://img-blog.csdnimg.cn/20200409174033331.png" alt></p>
+                <h2 id="第一锁-标准访问-先打印谁"><a href="#第一锁-标准访问-先打印谁" class="headerlink" title="第一锁.标准访问,先打印谁"></a>第一锁.标准访问,先打印谁</h2><p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C1.png" alt="1"></p>
+<p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C2.png" alt="2"></p>
+<p><strong>输出结果为”发邮件”</strong></p>
+<h2 id="第二锁-暂停四秒邮件方法-先打印谁"><a href="#第二锁-暂停四秒邮件方法-先打印谁" class="headerlink" title="第二锁.暂停四秒邮件方法,先打印谁"></a>第二锁.暂停四秒邮件方法,先打印谁</h2><p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C3.png" alt="3"></p>
+<p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C4.png" alt="4"></p>
+<h3 id="结果为："><a href="#结果为：" class="headerlink" title="结果为："></a>结果为：</h3><h3 id="发邮件"><a href="#发邮件" class="headerlink" title="发邮件"></a>发邮件</h3><p><strong>1，2原因如下：</strong></p>
+<p><strong>一个对象里如果有多个synchronized方法,某一时刻内,只要有一个线程去调用synchronized修饰的方法,那么其他线程就不能调用其他synchronized修饰的方法</strong></p>
+<p><strong>换句话说就是锁定是当前对象的this</strong></p>
+<h2 id="第三锁-新增普通sayHello方法-先打印谁"><a href="#第三锁-新增普通sayHello方法-先打印谁" class="headerlink" title="第三锁.新增普通sayHello方法,先打印谁"></a>第三锁.新增普通sayHello方法,先打印谁</h2><p><img src="/2020/041918532/%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C5.png" alt="5"></p>
+<p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C6.png" alt="6"></p>
+<p><strong>原因如下：</strong></p>
+<ul>
+<li><strong>加个普通方法发现和同步锁无关</strong></li>
+</ul>
+<h2 id="第四锁-两部手机-先打印谁"><a href="#第四锁-两部手机-先打印谁" class="headerlink" title="第四锁 两部手机,先打印谁"></a>第四锁 两部手机,先打印谁</h2><p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C7.png" alt="7"></p>
+<p><strong>原因如下：</strong></p>
+<ul>
+<li><strong>换成两个对象后,不是同一把锁</strong></li>
+</ul>
+<h2 id="第五锁-两个静态同步方法-同一手机先打印谁"><a href="#第五锁-两个静态同步方法-同一手机先打印谁" class="headerlink" title="第五锁 两个静态同步方法,同一手机先打印谁"></a>第五锁 两个静态同步方法,同一手机先打印谁</h2><p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C8.png" alt="8"></p>
+<p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C10.png" alt="10"></p>
+<h2 id="第六锁-两个静态同步方法-同一手机先打印谁"><a href="#第六锁-两个静态同步方法-同一手机先打印谁" class="headerlink" title="第六锁 两个静态同步方法,同一手机先打印谁"></a>第六锁 两个静态同步方法,同一手机先打印谁</h2><p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C8.png" alt="8"></p>
+<p><img src="/2020/041918532/%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C9.png" alt="9"></p>
+<p><strong>五六锁原因如下:</strong></p>
+<ul>
+<li><strong>加上static锁的是这个当前类的class对象</strong></li>
+</ul>
+<h2 id="第七锁-一个静态同步方法-1个普通同步方法-同一手机-先打印谁"><a href="#第七锁-一个静态同步方法-1个普通同步方法-同一手机-先打印谁" class="headerlink" title="第七锁 一个静态同步方法 1个普通同步方法 同一手机 先打印谁"></a>第七锁 一个静态同步方法 1个普通同步方法 同一手机 先打印谁</h2><p><img src="/2020/041918532/D:%5C%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD%5Cblog%5Csource_posts%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C11.png" alt="11"></p>
+<p><img src="/2020/041918532/D:%5C%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD%5Cblog%5Csource_posts%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C12.png" alt="12"></p>
+<p><strong>原因如下:</strong></p>
+<ul>
+<li><strong>synchronized锁的是当前对象 static synchronized锁的是当前类的字节码对象</strong></li>
+</ul>
+<h2 id="第八锁-一个静态同步方法-1个普通同步方法-不同手机-先打印谁"><a href="#第八锁-一个静态同步方法-1个普通同步方法-不同手机-先打印谁" class="headerlink" title="第八锁 一个静态同步方法 1个普通同步方法 不同手机 先打印谁"></a>第八锁 一个静态同步方法 1个普通同步方法 不同手机 先打印谁</h2><h2 id><a href="#" class="headerlink" title></a><img src="/2020/041918532/D:%5C%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD%5Cblog%5Csource_posts%5C%E5%85%AB%E9%94%81%E7%90%86%E8%AE%BA%5C13.png" alt="13"></h2><p><strong>原因同上</strong></p>
 
             </div>
             <hr/>
@@ -499,7 +528,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://ye1028.github.io/2020/041819220.html">https://ye1028.github.io/2020/041819220.html</a>
+                    <a href="https://ye1028.github.io/2020/041918532.html">https://ye1028.github.io/2020/041918532.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -537,8 +566,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95/">
-                                    <span class="chip bg-color">错误记录</span>
+                                <a href="/tags/%E7%BA%BF%E7%A8%8B/">
+                                    <span class="chip bg-color">线程</span>
                                 </a>
                             
                         </div>
@@ -580,9 +609,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/041918532.html">
                     <div class="card-image">
@@ -600,9 +630,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-04-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -611,6 +641,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -629,13 +660,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/041810381.html">
+                <a href="/2020/041819220.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="博客404">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="413">
                         
-                        <span class="card-title">博客404</span>
+                        <span class="card-title">413</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -659,8 +690,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E8%AE%B0%E5%BD%95%E9%94%99%E8%AF%AF/">
-                        <span class="chip bg-color">记录错误</span>
+                    <a href="/tags/%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95/">
+                        <span class="chip bg-color">错误记录</span>
                     </a>
                     
                 </div>
