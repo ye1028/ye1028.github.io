@@ -480,11 +480,11 @@
 [null, 72b4e8]
 [null, 72b4e8]</code></pre><p><strong>ArryList线程不安全,解决方法如下:</strong></p>
 <ol>
-<li><p><strong>使用线程安全的集合  List<String> list = new Vector&lt;&gt;();</String></strong></p>
+<li><p>使用线程安全的集合  List<String> list = new Vector&lt;&gt;();</String></p>
 </li>
-<li><p>*<em>使用集合工具类的方法转换成线程安全 List<String> list = Collections.synchronizedList(new ArrayList&lt;&gt;()); *</String></em></p>
+<li><p>使用集合工具类的方法转换成线程安全 List<String> list = Collections.synchronizedList(new ArrayList&lt;&gt;()); </String></p>
 </li>
-<li><p><strong>JUC  List<String> list = new CopyOnWriteArrayList();</String></strong></p>
+<li><p>JUC  List<String> list = new CopyOnWriteArrayList();</String></p>
 </li>
 </ol>
 
