@@ -480,14 +480,27 @@
 [null, 72b4e8]
 [null, 72b4e8]</code></pre><p><strong>ArryList线程不安全,解决方法如下:</strong></p>
 <ol>
-<li><p>使用线程安全的集合  List<String> list = new Vector&lt;&gt;();</String></p>
-</li>
-<li><p>使用集合工具类的方法转换成线程安全 List<String> list = Collections.synchronizedList(new ArrayList&lt;&gt;()); </String></p>
-</li>
-<li><p>JUC  List<String> list = new CopyOnWriteArrayList();</String></p>
-</li>
+<li>使用线程安全的集合  List<String> list = new Vector&lt;&gt;();</String></li>
+<li>使用集合工具类的方法转换成线程安全 List<String> list = Collections.synchronizedList(new ArrayList&lt;&gt;()); </String></li>
+<li>JUC  List<String> list = new CopyOnWriteArrayList();</String></li>
 </ol>
-
+<p><strong>CopyOnWriteArrayList原理：</strong></p>
+<p><strong>正如命名一样,在进行写操作时会首先Copy一份,在Copy的容器上做扩容(Arrays.copyOf())加一,添加数据完后再将原容器的引用指向新的容器.读操作会读取拷贝之前的数据,CopyOnWrite容器也是一种读写分类的思想</strong></p>
+<p><strong>源码如下：</strong></p>
+<pre><code>  public boolean add(E e) {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            Object[] elements = getArray();
+            int len = elements.length;
+            Object[] newElements = Arrays.copyOf(elements, len + 1);
+            newElements[len] = e;
+            setArray(newElements);
+            return true;
+        } finally {
+            lock.unlock();
+        }
+    }</code></pre>
             </div>
             <hr/>
 
