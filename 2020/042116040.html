@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="线程, 咖啡宝贝">
+    <meta name="keywords" content="类加载器, 咖啡宝贝">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>线程 | 咖啡宝贝</title>
+    <title>类加载器 | 咖啡宝贝</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -307,12 +307,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/26.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">线程</h1>
+                    <h1 class="description center-align post-title">类加载器</h1>
                 </div>
             </div>
         </div>
@@ -437,8 +437,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E7%BA%BF%E7%A8%8B/">
-                                <span class="chip bg-color">线程</span>
+                            <a href="/tags/JVM/">
+                                <span class="chip bg-color">JVM</span>
                             </a>
                         
                     </div>
@@ -453,7 +453,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-04-19
+                    2020-04-21
                 </div>
                 
 
@@ -469,41 +469,42 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="第一锁-标准访问-先打印谁"><a href="#第一锁-标准访问-先打印谁" class="headerlink" title="第一锁.标准访问,先打印谁"></a>第一锁.标准访问,先打印谁</h2><p><img src="/2020/041918532/1.png" alt="1"></p>
-<p><img src="/2020/041918532/2.png" alt="2"></p>
-<p><strong>输出结果为”发邮件”</strong></p>
-<h2 id="第二锁-暂停四秒邮件方法-先打印谁"><a href="#第二锁-暂停四秒邮件方法-先打印谁" class="headerlink" title="第二锁.暂停四秒邮件方法,先打印谁"></a>第二锁.暂停四秒邮件方法,先打印谁</h2><p><img src="/2020/041918532/3.png" alt="3"></p>
-<p><img src="/2020/041918532/4.png" alt="4"></p>
-<h3 id="结果为："><a href="#结果为：" class="headerlink" title="结果为："></a>结果为：</h3><h3 id="发邮件"><a href="#发邮件" class="headerlink" title="发邮件"></a>发邮件</h3><p><strong>1，2原因如下：</strong></p>
-<p><strong>一个对象里如果有多个synchronized方法,某一时刻内,只要有一个线程去调用synchronized修饰的方法,那么其他线程就不能调用其他synchronized修饰的方法</strong></p>
-<p><strong>换句话说就是锁定是当前对象的this</strong></p>
-<h2 id="第三锁-新增普通sayHello方法-先打印谁"><a href="#第三锁-新增普通sayHello方法-先打印谁" class="headerlink" title="第三锁.新增普通sayHello方法,先打印谁"></a>第三锁.新增普通sayHello方法,先打印谁</h2><p><img src="/2020/041918532/5.png" alt="5"></p>
-<p><img src="/2020/041918532/6.png" alt="6"></p>
-<p><strong>原因如下：</strong></p>
+                <h2 id="类加载器作用"><a href="#类加载器作用" class="headerlink" title="类加载器作用"></a>类加载器作用</h2><p><strong>类加载器负责加载class字节码文件到内存中,并将这些内容转换成方法区中的运行时数据结构并且类加载器只负责类的加载,至于它是否运行,则由Execution Engine决定</strong></p>
+<h2 id="类加载器的种类"><a href="#类加载器的种类" class="headerlink" title="类加载器的种类"></a>类加载器的种类</h2><p><img src="/2020/042116040/D:%5C%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD%5Cblog%5Csource_posts%5C%E6%B5%85%E8%B0%88%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%5Ctimg.jpg" alt="timg"></p>
+<p><strong>如图所示,虚拟机自带的类加载器为一下三种：</strong></p>
 <ul>
-<li><strong>加个普通方法发现和同步锁无关</strong></li>
+<li>根加载器(Bootstrap) C++</li>
+<li>扩展类加载器(Extension) Java</li>
+<li>应用类加载器(AppClassLoader) Java </li>
 </ul>
-<h2 id="第四锁-两部手机-先打印谁"><a href="#第四锁-两部手机-先打印谁" class="headerlink" title="第四锁 两部手机,先打印谁"></a>第四锁 两部手机,先打印谁</h2><p><img src="/2020/041918532/7.png" alt="7"></p>
-<p><strong>原因如下：</strong></p>
+<p><strong>以及用户自定义加载器:</strong></p>
 <ul>
-<li><strong>换成两个对象后,不是同一把锁</strong></li>
+<li>Java.lang.ClassLoader的子类,用户可以定制类的加载方法</li>
 </ul>
-<h2 id="第五锁-两个静态同步方法-同一手机先打印谁"><a href="#第五锁-两个静态同步方法-同一手机先打印谁" class="headerlink" title="第五锁 两个静态同步方法,同一手机先打印谁"></a>第五锁 两个静态同步方法,同一手机先打印谁</h2><p><img src="/2020/041918532/8.png" alt="8"></p>
-<p><img src="/2020/041918532/10.png" alt="10"></p>
-<h2 id="第六锁-两个静态同步方法-同一手机先打印谁"><a href="#第六锁-两个静态同步方法-同一手机先打印谁" class="headerlink" title="第六锁 两个静态同步方法,同一手机先打印谁"></a>第六锁 两个静态同步方法,同一手机先打印谁</h2><p><img src="/2020/041918532/8.png" alt="8"></p>
-<p><img src="/2020/041918532/9.png" alt="9"></p>
-<p><strong>五六锁原因如下:</strong></p>
+<p><strong>下面分别介绍各种类加载器的作用:</strong></p>
 <ul>
-<li><strong>加上static锁的是这个当前类的class对象</strong></li>
+<li><strong>根加载器：</strong>负责加载Java内置的class类如String等等,如下图所示</li>
 </ul>
-<h2 id="第七锁-一个静态同步方法-1个普通同步方法-同一手机-先打印谁"><a href="#第七锁-一个静态同步方法-1个普通同步方法-同一手机-先打印谁" class="headerlink" title="第七锁 一个静态同步方法 1个普通同步方法 同一手机 先打印谁"></a>第七锁 一个静态同步方法 1个普通同步方法 同一手机 先打印谁</h2><p><img src="/2020/041918532/11.png" alt="11"></p>
-<p><img src="/2020/041918532/12.png" alt="12"></p>
-<p><strong>原因如下:</strong></p>
+<p><img src="/2020/042116040/2.png" alt="2"></p>
 <ul>
-<li><strong>synchronized锁的是当前对象 static synchronized锁的是当前类的字节码对象</strong></li>
+<li><strong>扩展类加载器:</strong>负责加载Java后出的一些扩展类,如下图所示</li>
 </ul>
-<h2 id="第八锁-一个静态同步方法-1个普通同步方法-不同手机-先打印谁"><a href="#第八锁-一个静态同步方法-1个普通同步方法-不同手机-先打印谁" class="headerlink" title="第八锁 一个静态同步方法 1个普通同步方法 不同手机 先打印谁"></a>第八锁 一个静态同步方法 1个普通同步方法 不同手机 先打印谁</h2><h2 id><a href="#" class="headerlink" title></a><img src="/2020/041918532/13.png" alt="13"></h2><p><strong>原因同上</strong></p>
+<p><img src="/2020/042116040/1.png" alt="1"></p>
+<ul>
+<li><strong>应用类加载器:</strong>负责加载用户自己编写的Java类</li>
+</ul>
+<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><p><strong>类在被加载时,类加载器会将请求委托给父类去完成,如果父类加载反馈自己无法完成这个请求,字类加载器才会尝试</strong></p>
+<p><strong>作用:为了防止用户污染Java源码</strong></p>
+<pre><code>package java.lang;
 
+public class String {
+    public static void main(String[] args) {
+        System.out.println(&quot;string&quot;);
+    }
+}
+</code></pre><pre><code>错误: 在类 java.lang.String 中找不到 main 方法, 请将 main 方法定义为:
+   public static void main(String[] args)
+否则 JavaFX 应用程序类必须扩展javafx.application.Application</code></pre>
             </div>
             <hr/>
 
@@ -528,7 +529,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://ye1028.github.io/2020/041918532.html">https://ye1028.github.io/2020/041918532.html</a>
+                    <a href="https://ye1028.github.io/2020/042116040.html">https://ye1028.github.io/2020/042116040.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -566,8 +567,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E7%BA%BF%E7%A8%8B/">
-                                    <span class="chip bg-color">线程</span>
+                                <a href="/tags/JVM/">
+                                    <span class="chip bg-color">JVM</span>
                                 </a>
                             
                         </div>
@@ -609,9 +610,55 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2020/042116040.html">
+                    <div class="card-image">
+                        
+                        <img src="/medias/featureimages/26.jpg" class="responsive-img" alt="类加载器">
+                        
+                        <span class="card-title">类加载器</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            浅谈类加载器
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-21
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            ye
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2020/042015841.html">
                     <div class="card-image">
@@ -628,9 +675,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-04-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -644,50 +691,6 @@
                     
                     <a href="/tags/%E9%9B%86%E5%90%88/">
                         <span class="chip bg-color">集合</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/041819220.html">
-                    <div class="card-image">
-                        
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="413 Request Entity Too Large">
-                        
-                        <span class="card-title">413 Request Entity Too Large</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            记录开发中遇到的错误
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-18
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            ye
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95/">
-                        <span class="chip bg-color">错误记录</span>
                     </a>
                     
                 </div>
