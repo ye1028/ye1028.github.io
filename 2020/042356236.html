@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="jvm, cafe babe">
+    <meta name="keywords" content="volatitle, cafe babe">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>jvm | cafe babe</title>
+    <title>volatitle | cafe babe</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -307,12 +307,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">jvm</h1>
+                    <h1 class="description center-align post-title">volatitle</h1>
                 </div>
             </div>
         </div>
@@ -437,8 +437,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/JVM/">
-                                <span class="chip bg-color">JVM</span>
+                            <a href="/tags/juc/">
+                                <span class="chip bg-color">juc</span>
                             </a>
                         
                     </div>
@@ -453,7 +453,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-04-22
+                    2020-04-23
                 </div>
                 
 
@@ -469,71 +469,78 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="jvm结构图"><a href="#jvm结构图" class="headerlink" title="jvm结构图"></a>jvm结构图</h2><p><img src="/2020/042237319/1.jpg" alt="1"></p>
-<h2 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h2><p><strong>本地方法栈的作用：</strong></p>
-<ul>
-<li>为了融合不同的编程语言为Java所用,它的初衷是为了融合C/C++,在Java诞生的年代正是C/C++横行的年代要想要立足,必须有调用C/C++程序</li>
+                <h2 id="volatitle是什么"><a href="#volatitle是什么" class="headerlink" title="volatitle是什么"></a>volatitle是什么</h2><p><strong>volatitle是一个轻量级的同步机制</strong></p>
+<h2 id="volatitle的作用"><a href="#volatitle的作用" class="headerlink" title="volatitle的作用"></a>volatitle的作用</h2><ul>
+<li>保证可见性</li>
+<li>不能保证原子性</li>
+<li>静止指令重排</li>
 </ul>
-<h2 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h2><p><strong>程序计数器：</strong></p>
-<p>程序计数器为线程私有,每个线程都有单独的程序计数器，它的作用为了记录下一指令所在的地址</p>
-<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p><strong>栈的介绍：</strong></p>
-<p>栈也叫栈内容,主管Java程序的运行,是在线程创建时创建,它的生命周期是随着线程的生命周期,基本不会存在栈溢出的情况,因为在栈帧执行完后就是出栈,</p>
-<p><strong>栈主要储存什么:</strong></p>
+<h2 id="JMM内存模型之可见性"><a href="#JMM内存模型之可见性" class="headerlink" title="JMM内存模型之可见性"></a>JMM内存模型之可见性</h2><p>每一个线程都有自己私有的数据储存区域,但是线程对变量的操作必须在工作内存中进行,首先要先将数据拷贝在自己的数据储存区域,在自己的区域中进行操作完后在将值返回到主内存中,顺便一提线程之间无法访问对方的工作内存</p>
+<p>可见性指的是,数据在拷贝修改完,也在主内存中修改后会向其他线程发出信息,其他线程会重新在主内存中读取新数据</p>
+<h2 id="不能保证原子性"><a href="#不能保证原子性" class="headerlink" title="不能保证原子性"></a>不能保证原子性</h2><pre><code>public class test2 {
+    public static void main(String[] args) {
+        numb numb = new numb();
+        for (int i = 0; i &lt; 20 ; i++) {
+            new Thread(()-&gt;{
+                for (int j = 0; j &lt; 1000 ; j++) {
+                    numb.add();
+                }
+            }).start();
+        }
+        while (Thread.activeCount()&gt;2){
+            Thread.yield();
+        }
+        System.out.println(numb.numb);
+    }
+}
+
+class numb
+{
+    volatile int numb = 1;
+
+    public void add(){
+        numb ++ ;
+    }
+}</code></pre><pre><code>19793
+
+Process finished with exit code 0</code></pre><p>由此可见volatitle并不能保证原子性-</p>
+<p><strong>解决方法如下:</strong></p>
 <ul>
-<li><p>八大基本基础数据类型</p>
-</li>
-<li><p>对象的引用</p>
-</li>
-<li><p>方法</p>
-</li>
+<li>使用同步锁</li>
+<li>使用AtomicInteger</li>
 </ul>
-<p><strong>栈帧:</strong></p>
-<p>栈帧指的就是方法,在栈中先进后出,在栈帧执行完后就是出栈</p>
-<h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><p><strong>堆的介绍：</strong></p>
-<p>堆为线程共有,用来存储java的实例对象,存在堆溢出问题.</p>
-<p><strong>轻GC的过程(复制-&gt;清空-&gt;互换)</strong></p>
-<p>伊甸园内存满后回进行GC清理,其中的幸存者进入了from区,内存再次满后GC扫描伊甸园和from区,对这两个区域进行清理,这次的幸存者会复制到to区,然后清空伊甸园和from区对象,也即复制后有交换,谁空谁为to,最后to和from交换,原来的to会成为下一次GC的from区,如此交换15此还存活转入养老区.</p>
-<p><strong>堆的参数调优:</strong></p>
-<ul>
-<li>-Xms   设置初始值的大小 默认为电脑内存的1/64</li>
-<li>-Xmx   设置初始值的最大值 默认为电脑内存的1/4</li>
-</ul>
-<p>开发中建议初始值大小和最大值相等</p>
-<p><strong>堆的结构</strong></p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center"></th>
-<th align="center">伊甸园</th>
-<th>类的创建、运行、消亡，如果伊甸园内存占满会进行轻GC,其中的幸存者会进入from区</th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td align="center"><strong>新生区(占1/3)</strong></td>
-<td align="center"><strong>幸存者0区(from)</strong></td>
-<td></td>
-</tr>
-<tr>
-<td><strong>堆</strong></td>
-<td align="center"></td>
-<td align="center"><strong>幸存者1区(to)</strong></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td align="center"><strong>养老区(占2/3)</strong></td>
-<td align="center"></td>
-<td><strong>若养老区占满则会进行fullGC,如果GC完后还是腾不出空间则会报出OOM异常(堆溢出异常)</strong></td>
-</tr>
-<tr>
-<td></td>
-<td align="center"><strong>永久代(java以被替换为元空间)</strong></td>
-<td align="center"></td>
-<td><strong>储存类的模板类</strong></td>
-</tr>
-</tbody></table>
+<h2 id="指令重排"><a href="#指令重排" class="headerlink" title="指令重排"></a>指令重排</h2><p>计算机在执行程序时,为了提高效率,编译器和处理器常常会对指令重排</p>
+<h2 id="volatitle使用的例子-多线程单例模式"><a href="#volatitle使用的例子-多线程单例模式" class="headerlink" title="volatitle使用的例子 多线程单例模式"></a>volatitle使用的例子 多线程单例模式</h2><pre><code>class demo
+{
+    private static volatile demo demo = null;
+
+    private demo()
+    {
+        System.out.println(&quot;创建了实例&quot;);
+    }
+
+    //Dcl双端检测机制
+    private static demo createDemo(){
+        if(demo == null)
+        {
+            synchronized (demo.class){
+               if(demo == null){
+                   demo = new demo();
+               }
+            }
+        }
+        return demo;
+    }
+}</code></pre><p><strong>创建对象为以下三步:</strong></p>
+<ol>
+<li><p>分配对象空间</p>
+</li>
+<li><p>初始化对象</p>
+</li>
+<li><p>指向刚分配的内存地址</p>
+</li>
+</ol>
+<p>多线程下会有指令重排情况会导致报空值异常：2,3步骤可能被颠倒,导致报错,所以用volatitle修饰防止指令重排</p>
 
             </div>
             <hr/>
@@ -559,7 +566,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://ye1028.github.io/2020/042237319.html">https://ye1028.github.io/2020/042237319.html</a>
+                    <a href="https://ye1028.github.io/2020/042356236.html">https://ye1028.github.io/2020/042356236.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -597,8 +604,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/JVM/">
-                                    <span class="chip bg-color">JVM</span>
+                                <a href="/tags/juc/">
+                                    <span class="chip bg-color">juc</span>
                                 </a>
                             
                         </div>
@@ -640,9 +647,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/042356236.html">
                     <div class="card-image">
@@ -659,9 +667,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-04-23
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-23
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -670,6 +678,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -688,23 +697,23 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/042116040.html">
+                <a href="/2020/042237319.html">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/26.jpg" class="responsive-img" alt="类加载器">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="jvm">
                         
-                        <span class="card-title">类加载器</span>
+                        <span class="card-title">jvm</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            浅谈类加载器
+                            浅谈JVM
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-21
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-22
                             </span>
                         <span class="publish-author">
                             
