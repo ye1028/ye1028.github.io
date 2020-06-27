@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="io模型, cafe babe">
+    <meta name="keywords" content="索引, cafe babe">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>io模型 | cafe babe</title>
+    <title>索引 | cafe babe</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -307,12 +307,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/30.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">io模型</h1>
+                    <h1 class="description center-align post-title">索引</h1>
                 </div>
             </div>
         </div>
@@ -437,8 +437,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/IO/">
-                                <span class="chip bg-color">IO</span>
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                <span class="chip bg-color">数据库</span>
                             </a>
                         
                     </div>
@@ -453,7 +453,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-05-01
+                    2020-06-27
                 </div>
                 
 
@@ -469,22 +469,60 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="IO模型基本说明"><a href="#IO模型基本说明" class="headerlink" title="IO模型基本说明"></a>IO模型基本说明</h2><ul>
-<li><strong>BIO模型(同步阻塞模型):</strong>一个线程处理一个连接,客户端有连接请求后服务器端会启动一个线程进行处理,如果这个连接不做任何事会造成不必要的开销</li>
-</ul>
-<p><img src="/2020/050138452/1.png" alt="BIO"></p>
+                <h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p><strong>索引的本质:</strong></p>
 <ul>
-<li><strong>NIO模型(同步非阻塞模型):</strong>一个线程处理多个连接,客户端有连接请求服务器端会维护一个Select选择器,一个Select选择器会维护多个线程,选择器会轮询到连接有I/O请求就进行处理</li>
+<li>索引是排好序的快速查找数据结构</li>
+<li>我们平常所说的索引,如果没有特别指明,都是指B树</li>
 </ul>
-<p><img src="/2020/050138452/2.png" alt="NIO"></p>
+<p><strong>索引的目的:</strong></p>
 <ul>
-<li><strong>AIO模型(异步非阻塞模型):</strong>AIO引入异步通道的概念,采用了Proactor模式,简化了程序编写</li>
+<li>提高查询效率,可以类比字典</li>
 </ul>
-<h2 id="IO各个模型的适用范围"><a href="#IO各个模型的适用范围" class="headerlink" title="IO各个模型的适用范围"></a>IO各个模型的适用范围</h2><ul>
-<li><strong>BIO模型:</strong>适用于连接数目少且固定的架构,这种方式对服务器资源要求比较高</li>
-<li><strong>NIO模型:</strong>适用于连接数目较多且连接比较短的架构,如聊团服务器,弹幕系统……</li>
-<li><strong>AIO模型:</strong>适用于连接数目较多且连接比较长的架构,如相册服务器…..</li>
+<p><strong>索引的优势:</strong></p>
+<ul>
+<li>提高了数据检索的效率,降低了数据库的IO成本</li>
+<li>降低了数据排序的成本,降低了CPU的消耗</li>
 </ul>
+<p><strong>索引的劣势：</strong></p>
+<ul>
+<li>实际上索引也是一张表,该表保存了主键和索引字段,并指向了实体表的记录,所以索引列也是要占用空间的</li>
+<li>虽然索引大大提高了查询速度,同时也减低更新表的速度，如对表进行insert update和delete.因为更新表时mysql不仅要保存数据,还要保存一下索引文件每次更新添加了索引列的字段,都会调整因为更新所带来的键值变化后的索引信息</li>
+</ul>
+<p><strong>索引的分类:</strong></p>
+<ul>
+<li><p>单值索引:即一个索引只包含单个列,一个表可以有多个单列索引</p>
+</li>
+<li><p>唯一索引:索引列的值必须唯一,但可以为空</p>
+</li>
+<li><p>复合索引:即一个索引包含多个列</p>
+</li>
+<li><p>基本语法：</p>
+<p>​         1.创建：create [unique] index indexName on mytalbe(columnname(length))</p>
+<p>​         2.删除：drop index [indexName] on mytable</p>
+<p>​         3.查看：show index from tableName</p>
+</li>
+</ul>
+<p><strong>mysql索引结构：</strong></p>
+<ul>
+<li>BTree索引</li>
+<li>Hash索引</li>
+<li>full-text索引</li>
+<li>R-Tree索引</li>
+</ul>
+<p><strong>哪些情况需要创建索引:</strong></p>
+<ul>
+<li>频繁作为查看查询条件的字段</li>
+<li>查询中与其他表关联的字段,外键关系建立索引</li>
+<li>查询中统计或者分组字段</li>
+</ul>
+<p><strong>哪些情况不创建索引:</strong></p>
+<ul>
+<li>表记录太少</li>
+<li>经常增删改的表</li>
+<li>数据重复且分布平均</li>
+</ul>
+<p>假如一个表有10万行记录,有一个字段A只有T和F两种值,且每个值的分布概率大概为50%，那么对这种表A字段建索引一般不会提高效率</p>
+<p>如果一个表中有2000条记录,表索引列有1980个不同值,那么这个索引的选择性就是1980/2000=0.99.一个索引的选择性越接近1,这个索引的效率就越高</p>
 
             </div>
             <hr/>
@@ -510,7 +548,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://ye1028.github.io/2020/050138452.html">https://ye1028.github.io/2020/050138452.html</a>
+                    <a href="https://ye1028.github.io/2020/062711557.html">https://ye1028.github.io/2020/062711557.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -548,8 +586,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/IO/">
-                                    <span class="chip bg-color">IO</span>
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                    <span class="chip bg-color">数据库</span>
                                 </a>
                             
                         </div>
@@ -591,28 +629,42 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/062558816.html">
+                <a href="/2020/062711557.html">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/28.jpg" class="responsive-img" alt="名词">
                         
-                        <span class="card-title">名词</span>
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="索引">
+                        
+                        <span class="card-title">索引</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            名词
+                            索引索引的本质:
+
+索引是排好序的快速查找数据结构
+我们平常所说的索引,如果没有特别指明,都是指B树
+
+索引的目的:
+
+提高查询效率,可以类比字典
+
+索引的优势:
+
+提高了数据检索的效率,降低了数据库的IO成本
+降低了数据排序的成本,降低了
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-25
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -621,11 +673,12 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E8%8B%B1%E8%AF%AD/">
-                        <span class="chip bg-color">英语</span>
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <span class="chip bg-color">数据库</span>
                     </a>
                     
                 </div>
@@ -639,23 +692,33 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/042356236.html">
+                <a href="/2020/062542970.html">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="volatitle">
+                        <img src="/medias/featureimages/29.jpg" class="responsive-img" alt="人称代词">
                         
-                        <span class="card-title">volatitle</span>
+                        <span class="card-title">人称代词</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            浅谈volatitle
+                            代词一、人称代词
+    
+       
+       主格(动词之前)
+       宾格(动词之后)
+       形物代(形容性物主代词)
+       名物代
+       反身代词
+    
+    
+       第一人称单数
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-25
                             </span>
                         <span class="publish-author">
                             
@@ -668,8 +731,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/juc/">
-                        <span class="chip bg-color">juc</span>
+                    <a href="/tags/%E8%8B%B1%E8%AF%AD/">
+                        <span class="chip bg-color">英语</span>
                     </a>
                     
                 </div>
