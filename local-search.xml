@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>深入理解Mysql索引</title>
+    <link href="/2022/07/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Mysql%E7%B4%A2%E5%BC%95/"/>
+    <url>/2022/07/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Mysql%E7%B4%A2%E5%BC%95/</url>
+    
+    <content type="html"><![CDATA[<h1 id="深入理解Mysql索引"><a href="#深入理解Mysql索引" class="headerlink" title="深入理解Mysql索引"></a>深入理解Mysql索引</h1><blockquote><p>索引简介</p></blockquote><p>索引是帮助Mysql高效获取数据的<mark>排好序</mark>的<mark>数据结构</mark></p><p>索引数据结构</p><ul><li><p>hash：不能进行范围查询</p></li><li><p>红黑树</p></li></ul><p>众所周知数据都是存储在磁盘上的。在我们查询数据的时候，会进行磁盘io一条一条数据进行比对,磁盘io速度缓慢,在数据库数据量庞大的时候查询速度会极其缓慢。为了减少磁盘IO,这时候引入索引这个数据结构</p><blockquote><p>聚集索引与非聚集索引</p></blockquote><ul><li><p><mark>聚集索引</mark>：聚集索引就是索引结构和数据库数据的数据分别在同一个文件中,数据全部保存在叶子节点下面</p></li><li><p><mark>非聚集索引</mark>：和聚集索引定义相反,树结构的叶子节点保存的是该数据的磁盘位置</p></li></ul><blockquote><p>红黑树</p></blockquote><p>Mysql数据库中INNODB引擎中默认使用的索引结构是红黑树,所谓红黑树就是二叉树的变种.</p><p>为什么mysql采用红黑树的结构而不是用二叉树呢？</p><p>答：</p><ol><li><p>红黑树相较于二叉树它的非叶子节点不会储存数据</p></li><li><p>红黑树的叶子结点有指针相互引用,在范围搜索的情况下，会提升效率</p></li></ol><p><mark>特点</mark>：数据从左到右递增</p><p>结构如下：</p><p><img src="file:///C:/Users/WS/AppData/Roaming/marktext/images/2022-06-30-17-08-33-image.png" title="" alt="" width="298"><img src="file:///C:/Users/WS/AppData/Roaming/marktext/images/2022-06-30-17-09-04-image.png" title="" alt="" width="334"></p><blockquote><p>红黑树为何能提升效率</p></blockquote><p>搜索数据的时候,首先会先加载第一行的数据进入RAM（内存）中,匹配找到条件的大体位置,往下搜索,重复如上操作。由图可知,例如我们查找主键20的数据,只需要查询三次即可搜索到数据,相较于mysql的全表扫描效率提升极大。</p><blockquote><p>索引覆盖</p></blockquote><p>所谓的索引覆盖就是查询的数据在索引树中可以直接获取到，而不用回表到主键索引聚集表中查询</p><blockquote><p>回表</p></blockquote><p>在索引树中找不到需要的数据,返回到主键索引树中搜索</p><blockquote><p>索引下推</p></blockquote><p>在MYSQL5.6之前，select  * from a  where username like   “a%”  and age &#x3D; 23  在联合索引结构中进行条件搜索时，不会对索引查询的字段(age&#x3D;23)进行判断,会进行回表，在主键索引中进行条件过滤。5.6之后增加了索引下推这个概念,会先根据条件进行过滤</p><blockquote><p>联合索引</p></blockquote><p>MYSQL进行联合索引的创建时,会生成一个非聚集索引结构,默认只能有一个聚集索引即主键索引树。</p><p>例如：username , phone ,age 三个字段为一个联合索引.会先依照username进行排序,如果相等在依照phone进行排序如果相同最后才会以age进行排序.叶子节点储存着对应的id,以便进行回表查询</p><p><img src="C:\Users\WS\AppData\Roaming\marktext\images\2022-06-30-17-38-52-image.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Mysql</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Mysql</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
