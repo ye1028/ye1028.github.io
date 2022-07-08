@@ -16,21 +16,22 @@
   <meta name="author" content="ye">
   <meta name="keywords" content="">
   
-    <meta name="description" content="12345title: 幂等性tags:- 随笔categories:- 随笔  幂等性mq在发送消息的时候可能存在重复消费的问题。例如消费端消费完后还没有向mq发送缺人时突然宕机了,那么mq会认为消费还没有被消费会重新发送信息，这样会导致如数据库重复数据，数据库数据冲突，资源重复等。  这时候我们可以引入幂等性： 每个消息接收服务，首要判断就是幂等性。幂等性通过后再处理消息。 具体方案如下：">
+    <meta name="description" content="幂等性mq在发送消息的时候可能存在重复消费的问题。例如消费端消费完后还没有向mq发送缺人时突然宕机了,那么mq会认为消费还没有被消费会重新发送信息，这样会导致如数据库重复数据，数据库数据冲突，资源重复等。  这时候我们可以引入幂等性： 每个消息接收服务，首要判断就是幂等性。幂等性通过后再处理消息。 具体方案如下：  用全局的消息id来控制幂等性.在消费端我们首先先判断Redis中是否存在该信息,如">
 <meta property="og:type" content="article">
-<meta property="og:title" content="葉">
+<meta property="og:title" content="幂等性">
 <meta property="og:url" content="http://example.com/2022/07/08/%E9%9A%8F%E7%AC%94/%E5%B9%82%E7%AD%89%E6%80%A7/index.html">
 <meta property="og:site_name" content="葉">
-<meta property="og:description" content="12345title: 幂等性tags:- 随笔categories:- 随笔  幂等性mq在发送消息的时候可能存在重复消费的问题。例如消费端消费完后还没有向mq发送缺人时突然宕机了,那么mq会认为消费还没有被消费会重新发送信息，这样会导致如数据库重复数据，数据库数据冲突，资源重复等。  这时候我们可以引入幂等性： 每个消息接收服务，首要判断就是幂等性。幂等性通过后再处理消息。 具体方案如下：">
+<meta property="og:description" content="幂等性mq在发送消息的时候可能存在重复消费的问题。例如消费端消费完后还没有向mq发送缺人时突然宕机了,那么mq会认为消费还没有被消费会重新发送信息，这样会导致如数据库重复数据，数据库数据冲突，资源重复等。  这时候我们可以引入幂等性： 每个消息接收服务，首要判断就是幂等性。幂等性通过后再处理消息。 具体方案如下：  用全局的消息id来控制幂等性.在消费端我们首先先判断Redis中是否存在该信息,如">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-07-08T09:27:21.268Z">
-<meta property="article:modified_time" content="2022-07-08T09:47:16.887Z">
+<meta property="article:modified_time" content="2022-07-08T09:50:15.768Z">
 <meta property="article:author" content="ye">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>葉</title>
+  <title>幂等性 - 葉</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="幂等性"></span>
           
         </div>
 
@@ -218,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          987 字
+          951 字
         
       </span>
     
@@ -229,7 +230,7 @@
         
         
         
-          9 分钟
+          8 分钟
         
       </span>
     
@@ -267,7 +268,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none"></h1>
+            <h1 style="display: none">幂等性</h1>
             
               <p class="note note-info">
                 
@@ -280,9 +281,7 @@
             
               <div class="markdown-body">
                 
-                <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">title:</span> <span class="hljs-string">幂等性</span><br><span class="hljs-attr">tags:</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">随笔</span><br><span class="hljs-attr">categories:</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">随笔</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="幂等性"><a href="#幂等性" class="headerlink" title="幂等性"></a>幂等性</h3><p>mq在发送消息的时候可能存在重复消费的问题。例如消费端消费完后还没有向mq发送缺人时突然宕机了,那么mq会认为消费还没有被消费会重新发送信息，这样会导致如数据库重复数据，数据库数据冲突，资源重复等。 </p>
+                <h3 id="幂等性"><a href="#幂等性" class="headerlink" title="幂等性"></a>幂等性</h3><p>mq在发送消息的时候可能存在重复消费的问题。例如消费端消费完后还没有向mq发送缺人时突然宕机了,那么mq会认为消费还没有被消费会重新发送信息，这样会导致如数据库重复数据，数据库数据冲突，资源重复等。 </p>
 <p>这时候我们可以引入幂等性：</p>
 <p>每个消息接收服务，首要<mark>判断就是幂等性</mark>。幂等性通过后再处理消息。</p>
 <p>具体方案如下：</p>
@@ -310,6 +309,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%9A%8F%E7%AC%94/" class="category-chain-item">随笔</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%9A%8F%E7%AC%94/">#随笔</a>
+      
+    </div>
   
 </div>
 
@@ -319,7 +346,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
+      <div>幂等性</div>
       <div>http://example.com/2022/07/08/随笔/幂等性/</div>
     </div>
     <div class="license-meta">
