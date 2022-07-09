@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/imgs/RedisCluster.png">
 <meta property="article:published_time" content="2022-07-09T00:51:21.088Z">
-<meta property="article:modified_time" content="2022-07-09T03:20:58.744Z">
+<meta property="article:modified_time" content="2022-07-09T03:21:38.169Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
@@ -331,7 +331,7 @@
 <p>集群脑裂数据丢失</p>
 </blockquote>
 <p>redis集群没有过半机制会有脑裂问题（由于网络问题主节点和子节点连接不上。等到一定时间选择出一个新的主节点），网络分区导致脑裂后多个主节点对外提供写服务，一旦网络分区恢复，会将其中一个主节点变为从节点，这时会有大量数据丢失。<br>解决方法</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver"><span class="hljs-built_in">min</span>-slaves-<span class="hljs-built_in">to</span>-<span class="hljs-built_in">write</span> <span class="hljs-number">1</span> <span class="hljs-comment"> //写数据成功最少同步的slave数量，这个数量可以模仿大于半数机制配置，比如集群总共三个节点可以配置1，加上leader就是2，</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver"><span class="hljs-built_in">min</span>-slaves-<span class="hljs-built_in">to</span>-<span class="hljs-built_in">write</span> <span class="hljs-number">1</span> <span class="hljs-comment"> //写数据成功最少同步的slave数量，这个数量可以模仿大于半数机制配置，比如集群总共三个节点可以配置1，加上leader就是2</span><br></code></pre></td></tr></table></figure>
 
                 
               </div>
