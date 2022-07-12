@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://example.com/img/imgs/threadlocal.png">
 <meta property="og:image" content="http://example.com/img/imgs/cache.png">
 <meta property="article:published_time" content="2022-07-12T01:29:47.067Z">
-<meta property="article:modified_time" content="2022-07-12T03:31:09.190Z">
+<meta property="article:modified_time" content="2022-07-12T07:55:03.627Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.2k 字
+          5.7k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          44 分钟
+          48 分钟
         
       </span>
     
@@ -278,7 +278,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月12日 中午
+                    本文最后更新于：2022年7月12日 下午
                   
                 
               </p>
@@ -433,6 +433,26 @@
 <p>会造成的问题</p>
 </blockquote>
 <p>由于有缓存的存在，线程会率先在缓存中获取.这样可能会造成可见性问题。例如：a,b线程在自己的缓存中都有这个数据,a对数据进行了改变同步到内存中，但是b的缓存并没有同步它会直接从自己缓存中获取以前的数据。</p>
+<h3 id="java中synchronized关键字"><a href="#java中synchronized关键字" class="headerlink" title="java中synchronized关键字"></a>java中synchronized关键字</h3><h4 id="synchronized关键字介绍"><a href="#synchronized关键字介绍" class="headerlink" title="synchronized关键字介绍"></a>synchronized关键字介绍</h4><p>在多线程操作共享资源的时候可能会造成线程安全的问题。这时候我们可以使用synchronized来修饰方法或者代码块.获得锁的线程才能进行执行。其他的线程直接陷入阻塞状态。</p>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs wren"><span class="hljs-title function_">synchronized</span> (<span class="hljs-variable language_">this</span>)&#123;<br>          <br>&#125; <span class="hljs-comment">//代码块中的代码只能有一个线程执行</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-type">void</span> <span class="hljs-title">sendGift</span><span class="hljs-params">()</span></span>&#123;<br>     <br>&#125;<span class="hljs-comment">//和上面一样只不过锁的是方法全部的代码</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="synchronized的内存语义"><a href="#synchronized的内存语义" class="headerlink" title="synchronized的内存语义"></a>synchronized的内存语义</h4><p>synchronized在老版本的jdk中是一个重量级锁，效率极其低下在很多情况下我们并不需要重量级锁。在现在的版本中jdk引入了一个锁升级的概念。</p>
+<p>偏向锁-&gt;轻量级锁-&gt;重量级锁</p>
+<blockquote>
+<p>偏向锁</p>
+</blockquote>
+<p>偏向锁主要用来优化同一线程多次申请同一个锁的竞争</p>
+<blockquote>
+<p>轻量级锁</p>
+</blockquote>
+<p>在竞争少情况的时候，使用自旋锁</p>
+<blockquote>
+<p>重量级锁</p>
+</blockquote>
+<p>在竞争激烈情况的时候，使用重量级锁</p>
+<p>注意：锁的升级不可逆</p>
 
                 
               </div>
