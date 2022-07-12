@@ -25,8 +25,10 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/imgs/state.png">
 <meta property="og:image" content="http://example.com/img/imgs/alibaba.png">
+<meta property="og:image" content="http://example.com/2022/07/12/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%B9%B6%E5%8F%91%E7%AF%87%E6%80%BB%E7%BB%93/threadlocal.png">
+<meta property="og:image" content="http://example.com/2022/07/12/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%B9%B6%E5%8F%91%E7%AF%87%E6%80%BB%E7%BB%93/cache.png">
 <meta property="article:published_time" content="2022-07-12T01:29:47.067Z">
-<meta property="article:modified_time" content="2022-07-12T03:07:26.909Z">
+<meta property="article:modified_time" content="2022-07-12T03:15:34.470Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.9k 字
+          5k 字
         
       </span>
     
@@ -233,7 +235,7 @@
         
         
         
-          41 分钟
+          42 分钟
         
       </span>
     
@@ -411,6 +413,11 @@
 
 <h4 id="如何避免线程死锁"><a href="#如何避免线程死锁" class="headerlink" title="如何避免线程死锁"></a>如何避免线程死锁</h4><p>破环其中一个线程的必要天骄</p>
 <h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><h4 id="ThreadLocal介绍"><a href="#ThreadLocal介绍" class="headerlink" title="ThreadLocal介绍"></a>ThreadLocal介绍</h4><p>我们都知道访问共享资源容易产生线程安全的问题。那有没有什么方法只让它们访问自己的本地的变量呢,Java提供了一个Threadloal，它会在线程本地创建一个变量副本。</p>
+<h3 id="ThreadLocal的实现"><a href="#ThreadLocal的实现" class="headerlink" title="ThreadLocal的实现"></a>ThreadLocal的实现</h3><img src="threadlocal.png" srcset="/img/loading.gif" lazyload>
+
+<p>本质上就是map集合.threadlocal是工具类提供了调用的方法。实际上存放在ThreadlocalMap中。我们在使用完资源后要记得释放，不然有可能造成内存溢出问题。</p>
+<h2 id="Java中变量的内存可见性"><a href="#Java中变量的内存可见性" class="headerlink" title="Java中变量的内存可见性"></a>Java中变量的内存可见性</h2><h4 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h4><p>我们来看一看Java对共享变量访问的模型</p>
+<img src="cache.png" srcset="/img/loading.gif" lazyload>
 
                 
               </div>
