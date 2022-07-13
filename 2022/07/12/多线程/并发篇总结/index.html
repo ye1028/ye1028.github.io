@@ -27,8 +27,10 @@
 <meta property="og:image" content="http://example.com/img/imgs/alibaba.png">
 <meta property="og:image" content="http://example.com/img/imgs/threadlocal.png">
 <meta property="og:image" content="http://example.com/img/imgs/cache.png">
+<meta property="og:image" content="http://example.com/img/imgs/Snipaste_2022-07-13_11-10-14.png">
+<meta property="og:image" content="http://example.com/img/imgs/twocache.png">
 <meta property="article:published_time" content="2022-07-12T01:29:47.067Z">
-<meta property="article:modified_time" content="2022-07-12T07:55:03.627Z">
+<meta property="article:modified_time" content="2022-07-13T03:13:08.239Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.7k 字
+          7k 字
         
       </span>
     
@@ -235,7 +237,7 @@
         
         
         
-          48 分钟
+          59 分钟
         
       </span>
     
@@ -278,7 +280,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月12日 下午
+                    本文最后更新于：2022年7月13日 上午
                   
                 
               </p>
@@ -416,7 +418,7 @@
 <h3 id="ThreadLocal的实现"><a href="#ThreadLocal的实现" class="headerlink" title="ThreadLocal的实现"></a>ThreadLocal的实现</h3><img src="/img/imgs/threadlocal.png" srcset="/img/loading.gif" lazyload>
 
 <p>本质上就是map集合.threadlocal是工具类提供了调用的方法。实际上存放在ThreadlocalMap中。我们在使用完资源后要记得释放，不然有可能造成内存溢出问题。</p>
-<h2 id="Java中变量的内存可见性"><a href="#Java中变量的内存可见性" class="headerlink" title="Java中变量的内存可见性"></a>Java中变量的内存可见性</h2><h4 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h4><p>我们来看一看Java对共享变量访问的模型</p>
+<h3 id="Java中变量的内存可见性"><a href="#Java中变量的内存可见性" class="headerlink" title="Java中变量的内存可见性"></a>Java中变量的内存可见性</h3><h4 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h4><p>我们来看一看Java对共享变量访问的模型</p>
 <img src="/img/imgs/cache.png" srcset="/img/loading.gif" lazyload>
 
 <ol>
@@ -433,6 +435,26 @@
 <p>会造成的问题</p>
 </blockquote>
 <p>由于有缓存的存在，线程会率先在缓存中获取.这样可能会造成可见性问题。例如：a,b线程在自己的缓存中都有这个数据,a对数据进行了改变同步到内存中，但是b的缓存并没有同步它会直接从自己缓存中获取以前的数据。</p>
+<h3 id="数据同步的八大原子操作"><a href="#数据同步的八大原子操作" class="headerlink" title="数据同步的八大原子操作"></a>数据同步的八大原子操作</h3><ol>
+<li><p>lock(锁定):线程锁定主内存的操作的变量,其他线程不能操作</p>
+</li>
+<li><p>unlock(解锁):线程解锁主内存的操作的变量</p>
+</li>
+<li><p>read(读取):把主内存的要操作的变量传输到缓存当中</p>
+</li>
+<li><p>load(加载):把缓存中得到的变量值放入工作内存的副本中</p>
+</li>
+<li><p>use(使用):把工作内存副本中的要操作的变量值传递给执行引擎</p>
+</li>
+<li><p>assign(赋值):把从执行引擎收到的值赋给工作内存的变量</p>
+</li>
+<li><p>store(存储): 把工作内存的值传入主内存中</p>
+</li>
+<li><p>write(写入):再把store操作的值传送到主内存的值中</p>
+</li>
+</ol>
+<img src="/img/imgs/Snipaste_2022-07-13_11-10-14.png" srcset="/img/loading.gif" lazyload>
+
 <h3 id="java中synchronized关键字"><a href="#java中synchronized关键字" class="headerlink" title="java中synchronized关键字"></a>java中synchronized关键字</h3><h4 id="synchronized关键字介绍"><a href="#synchronized关键字介绍" class="headerlink" title="synchronized关键字介绍"></a>synchronized关键字介绍</h4><p>在多线程操作共享资源的时候可能会造成线程安全的问题。这时候我们可以使用synchronized来修饰方法或者代码块.获得锁的线程才能进行执行。其他的线程直接陷入阻塞状态。</p>
 <figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs wren"><span class="hljs-title function_">synchronized</span> (<span class="hljs-variable language_">this</span>)&#123;<br>          <br>&#125; <span class="hljs-comment">//代码块中的代码只能有一个线程执行</span><br></code></pre></td></tr></table></figure>
 
@@ -453,6 +475,46 @@
 </blockquote>
 <p>在竞争激烈情况的时候，使用重量级锁</p>
 <p>注意：锁的升级不可逆</p>
+<blockquote>
+<p>内存语义</p>
+</blockquote>
+<p>synchronized的内存语义是把代码块中使用到的变量清楚。获取的时候直接从主内存中去取数据,写入数据时直接写入主内存中。</p>
+<h3 id="Volatitle"><a href="#Volatitle" class="headerlink" title="Volatitle"></a>Volatitle</h3><p>synchronized用来解决可见性太过于笨重了.Java又提供了一个Volatitle关键字。它可以保证可见性和禁止指令重排。Volatitle在读取的时候会清除缓存中的数据。在写入的时候会写入主内存。Volatitle不能保证原子性</p>
+<h3 id="Java的原子性操作"><a href="#Java的原子性操作" class="headerlink" title="Java的原子性操作"></a>Java的原子性操作</h3><blockquote>
+<p>何为原子性</p>
+</blockquote>
+<p>原子性指的是执行一系列操作时，要么全部执行完，要么不执行。</p>
+<blockquote>
+<p>java中哪些可以保证原子性操作</p>
+</blockquote>
+<ul>
+<li><p>synchronized和lock锁可以保证原子性</p>
+</li>
+<li><p>Volatitle关键字不能保证</p>
+</li>
+</ul>
+<h3 id="Java中的CAS操作"><a href="#Java中的CAS操作" class="headerlink" title="Java中的CAS操作"></a>Java中的CAS操作</h3><blockquote>
+<p>何为CAS</p>
+</blockquote>
+<p>在JAVA中处理并发的过程中使用锁有一个不好之处，获取不到锁的线程会陷入阻塞状态这一状态的切换会消耗大量的系统资源。这时候引入了CAS这个概念。CAS是比较与交换的缩写。它有四个关键的参数。内存的偏移量，内存的地址，旧值，新值。线程获取不到锁的时候会自旋等待占用锁的线程执行完成，而不会进行上下文切换。</p>
+<blockquote>
+<p>使用了CAS的类</p>
+</blockquote>
+<ul>
+<li>Lock锁、AQS</li>
+</ul>
+<h3 id="UnSafe类"><a href="#UnSafe类" class="headerlink" title="UnSafe类"></a>UnSafe类</h3><p>unsafe是一个用来操作内存的工具包。它们使用JNI的方式访问本地C++实现库。</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">native</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">compareAndSwapObject</span>(<span class="hljs-built_in">Object</span> var1, <span class="hljs-type">long</span> var2, <span class="hljs-built_in">Object</span> var4, <span class="hljs-built_in">Object</span> var5);<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">native</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">compareAndSwapInt</span>(<span class="hljs-built_in">Object</span> var1, <span class="hljs-type">long</span> var2, <span class="hljs-type">int</span> var4, <span class="hljs-type">int</span> var5);<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">native</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">compareAndSwapLong</span>(<span class="hljs-built_in">Object</span> var1, <span class="hljs-type">long</span> var2, <span class="hljs-type">long</span> var4, <span class="hljs-type">long</span> var6);<br></code></pre></td></tr></table></figure>
+
+<p>CAS的实现基于UnSafe工具包。</p>
+<h3 id="伪共享"><a href="#伪共享" class="headerlink" title="伪共享"></a>伪共享</h3><h4 id="什么是伪共享"><a href="#什么是伪共享" class="headerlink" title="什么是伪共享"></a>什么是伪共享</h4><p>为了解决系统中主内存和CPU间的速度差，操作系统引入了缓存。在主内存和CPU中间放入一级或者多级缓存,从主内存获取的数据会放在缓存中,下一次获取可直接从缓存中获取提升速度。如下图所示：</p>
+<img src="/img/imgs/twocache.png" srcset="/img/loading.gif" lazyload>
+
+<blockquote>
+<p> 那么数据在缓存中如何存储的呢？</p>
+</blockquote>
+<p>数据在缓存中是以块的形式存储。例如线程从主内存中获取数据A那么它取回的时候不单单只取A还会按照Cache行的大小把它旁边的BCD全部带回去把行填满。Cache行的大小一般为2的幕次数字节。</p>
+<p>伪共享就是线程A访问A线程B访问B。由于同时只能有一个线程操作缓存行，所以相比将每个变量放到一个缓存行，性能会有所下降，这就是伪共享</p>
 
                 
               </div>
@@ -540,6 +602,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/07/13/%E6%A1%86%E6%9E%B6/Spring%E6%BA%90%E7%A0%81/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
