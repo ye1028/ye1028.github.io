@@ -24,7 +24,7 @@
 <meta property="og:description" content="Spring运行流程Spring中一些前置知识如何设置容器通常设置容器有以下几种方式：  通过xml配置文件配置Bean  通过注解得形式配置Bean   何为BeanDefinitionBeanDefinition是Bean的信息定义类,它包含着Bean的一些如是否单例、scope作用域、是否懒加载等信息 123456789101112131415161718192021222324252627">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-07-13T00:59:39.867Z">
-<meta property="article:modified_time" content="2022-07-20T09:07:40.427Z">
+<meta property="article:modified_time" content="2022-07-22T09:05:45.183Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary_large_image">
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          4.5k 字
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          12 分钟
+          38 分钟
         
       </span>
     
@@ -273,7 +273,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月20日 下午
+                    本文最后更新于：2022年7月22日 下午
                   
                 
               </p>
@@ -289,7 +289,7 @@
 </li>
 </ol>
 <h4 id="何为BeanDefinition"><a href="#何为BeanDefinition" class="headerlink" title="何为BeanDefinition"></a>何为BeanDefinition</h4><p>BeanDefinition是Bean的信息定义类,它包含着Bean的一些如是否单例、scope作用域、是否懒加载等信息</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> interface BeanDefinition extends AttributeAccessor, BeanMetadataElement &#123;<br><br>	<span class="hljs-type">String</span> SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;<br><br>	<span class="hljs-type">String</span> SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;<br><br>	<span class="hljs-type">int</span> ROLE_APPLICATION = <span class="hljs-number">0</span>;<br><br>	<span class="hljs-type">int</span> ROLE_SUPPORT = <span class="hljs-number">1</span>;<br><br>	<span class="hljs-type">int</span> ROLE_INFRASTRUCTURE = <span class="hljs-number">2</span>;<br><br>	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setParentName</span><span class="hljs-params">(<span class="hljs-type">String</span> parentName)</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">String</span> <span class="hljs-title">getParentName</span><span class="hljs-params">()</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setBeanClassName</span><span class="hljs-params">(<span class="hljs-type">String</span> beanClassName)</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">String</span> <span class="hljs-title">getBeanClassName</span><span class="hljs-params">()</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setScope</span><span class="hljs-params">(<span class="hljs-type">String</span> scope)</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">String</span> <span class="hljs-title">getScope</span><span class="hljs-params">()</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setLazyInit</span><span class="hljs-params">(<span class="hljs-type">boolean</span> lazyInit)</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-type">boolean</span> <span class="hljs-title">isLazyInit</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> interface BeanDefinition extends AttributeAccessor, BeanMetadataElement &#123;<br><br>    <span class="hljs-type">String</span> SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;<br><br>    <span class="hljs-type">String</span> SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;<br><br>    <span class="hljs-type">int</span> ROLE_APPLICATION = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-type">int</span> ROLE_SUPPORT = <span class="hljs-number">1</span>;<br><br>    <span class="hljs-type">int</span> ROLE_INFRASTRUCTURE = <span class="hljs-number">2</span>;<br><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setParentName</span><span class="hljs-params">(<span class="hljs-type">String</span> parentName)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">String</span> <span class="hljs-title">getParentName</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setBeanClassName</span><span class="hljs-params">(<span class="hljs-type">String</span> beanClassName)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">String</span> <span class="hljs-title">getBeanClassName</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setScope</span><span class="hljs-params">(<span class="hljs-type">String</span> scope)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">String</span> <span class="hljs-title">getScope</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setLazyInit</span><span class="hljs-params">(<span class="hljs-type">boolean</span> lazyInit)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-type">boolean</span> <span class="hljs-title">isLazyInit</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h4 id="何为BeanPostProcessor"><a href="#何为BeanPostProcessor" class="headerlink" title="何为BeanPostProcessor"></a>何为BeanPostProcessor</h4><p>BeanPostProcessor是Spring提供的可以对Bean进行修改的拓展类。用户只要实现这个类并交给Spring容器来管理.那么Spring在加载的时候会默认加载并运行用户写的拓展方法。</p>
 <p>实现BeanFactoryPostProcessor接口可以对BeanDefinitionMap中的BeanDefinition进行修改。</p>
@@ -312,21 +312,32 @@
 </li>
 </ol>
 <h3 id="IOC的创建过程"><a href="#IOC的创建过程" class="headerlink" title="IOC的创建过程"></a>IOC的创建过程</h3><ol>
-<li><p>实例化</p>
+<li><p>读取器读取定义的配置类</p>
 </li>
-<li><p>初始化</p>
+<li><p>扫描器扫描配置类的配置信息并用注册器注册进BeanDefinition(配置信息集合,存储着类的基本信息是否懒加载等等)中。</p>
 </li>
-<li><p>执行 Aware 方法</p>
+<li><p>执行bean工厂的后置处理器</p>
 </li>
-<li><p>执行前置处理器</p>
-</li>
-<li><p>init</p>
-</li>
-<li><p>执行后置处理器</p>
-</li>
-<li><p>销毁</p>
+<li><p>通过Bean工厂生成相应的实例，bean的生成可以分成以下几步<br>4.1.通过反射实例化bean<br>4.2.属性赋值<br>4.3.实现了aware会一一执行aware实现的方法<br>4.4 执行bean的后置处理器<br>4.5 执行init方法<br>4.6执行bean的后置处理器<br>4.7执行销毁的方法</p>
 </li>
 </ol>
+<p>BeanFactory是最顶层的接口，它只定义了创建bean获取Bean的方法。实际上是由子类ApplicationContext来创建。ApplicationContext在BeanFactory的基础上增添了许多额外的功能,例如Bean的后置处理器(如解析注解的后置处理器)、国际化等等拓展功能。</p>
+<p>以注解的方法为例：</p>
+<p>1.创建的时候会优先执行父类的构造器,在父类中率先创建了bean工厂</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">GenericApplicationContext</span>()</span> &#123;<br>   <span class="hljs-keyword">this</span>.beanFactory = <span class="hljs-keyword">new</span> DefaultListableBeanFactory();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.在执行本类的构造器,在this方法中创建了读取器(reader)和扫描器(scanner),在创建读取器的方法中,spring率先创建了一些重要的beanFactory的后置处理器(例如解析注解的后置处理器)</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs scss">public <span class="hljs-built_in">AnnotationConfigApplicationContext</span>(Class&lt;?&gt;... componentClasses) &#123;<br> <span class="hljs-built_in">this</span>();<br> <span class="hljs-built_in">register</span>(componentClasses);<br> <span class="hljs-built_in">refresh</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.register方法中将配置类加载到了BeanDefinition中</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">register</span>(<span class="hljs-params">Class&lt;?&gt;... componentClasses</span>) &#123;<br>   <span class="hljs-title class_">Assert</span>.<span class="hljs-title function_">notEmpty</span>(componentClasses, <span class="hljs-string">&quot;At least one component class must be specified&quot;</span>);<br> <span class="hljs-variable language_">this</span>.<span class="hljs-property">reader</span>.<span class="hljs-title function_">register</span>(componentClasses);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>4.接下来就是refresh,Spring最为核心的方法,在这个方法中使用了模板模式,自定义的beanFactory的后置处理器加载和执行以及bean的后置处理器的加载和执行已经bean的创建都在此方法中实现</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void refresh<span class="hljs-literal">()</span> throws BeansException, IllegalStateException &#123;<br>   synchronized (this.startupShutdownMonitor) &#123;<br>      <span class="hljs-comment">// Prepare this context for refreshing.</span><br> prepare<span class="hljs-constructor">Refresh()</span>; <span class="hljs-comment">//进行环境的初始化</span><br><br> <span class="hljs-comment">// Tell the subclass to refresh the internal bean factory.</span><br> ConfigurableListableBeanFactory beanFactory = obtain<span class="hljs-constructor">FreshBeanFactory()</span>;<span class="hljs-comment">//刷新bean工厂并返回bean工厂</span><br><br> <span class="hljs-comment">// Prepare the bean factory for use in this context.</span><br> prepare<span class="hljs-constructor">BeanFactory(<span class="hljs-params">beanFactory</span>)</span>;<span class="hljs-comment">//设置bean工厂的参数</span><br><br> <span class="hljs-keyword">try</span> &#123;<br>         <span class="hljs-comment">// Allows post-processing of the bean factory in context subclasses.</span><br> post<span class="hljs-constructor">ProcessBeanFactory(<span class="hljs-params">beanFactory</span>)</span>;<br><br> <span class="hljs-comment">// Invoke factory processors registered as beans in the context.</span><br> invoke<span class="hljs-constructor">BeanFactoryPostProcessors(<span class="hljs-params">beanFactory</span>)</span>; **/按照优先级执行beanFactory的后置处理器并依次执行<br><br> <span class="hljs-comment">// Register bean processors that intercept bean creation.</span><br> register<span class="hljs-constructor">BeanPostProcessors(<span class="hljs-params">beanFactory</span>)</span>; <span class="hljs-comment">//注册bean的后置处理器</span><br><br> <span class="hljs-comment">// Initialize message source for this context.</span><br> init<span class="hljs-constructor">MessageSource()</span>; <span class="hljs-comment">//国际化功能</span><br><br> <span class="hljs-comment">// Initialize event multicaster for this context.</span><br> init<span class="hljs-constructor">ApplicationEventMulticaster()</span>; <span class="hljs-comment">//事件</span><br><br> <span class="hljs-comment">// Initialize other special beans in specific context subclasses.</span><br> on<span class="hljs-constructor">Refresh()</span>;<br><br> <span class="hljs-comment">// Check for listener beans and register them.</span><br> register<span class="hljs-constructor">Listeners()</span>;<br><br> <span class="hljs-comment">// Instantiate all remaining (non-lazy-init) singletons.</span><br> finish<span class="hljs-constructor">BeanFactoryInitialization(<span class="hljs-params">beanFactory</span>)</span>; <span class="hljs-comment">//创建bean实例</span><br><br> <span class="hljs-comment">// Last step: publish corresponding event.</span><br> finish<span class="hljs-constructor">Refresh()</span>;<br> &#125;<br><br>      catch (BeansException ex) &#123;<br>         <span class="hljs-keyword">if</span> (logger.is<span class="hljs-constructor">WarnEnabled()</span>) &#123;<br>            logger.warn(<span class="hljs-string">&quot;Exception encountered during context initialization - &quot;</span> +<br>                  <span class="hljs-string">&quot;cancelling refresh attempt: &quot;</span> + ex);<br> &#125;<br><br>         <span class="hljs-comment">// Destroy already created singletons to avoid dangling resources.</span><br> destroy<span class="hljs-constructor">Beans()</span>;<br><br> <span class="hljs-comment">// Reset &#x27;active&#x27; flag.</span><br> cancel<span class="hljs-constructor">Refresh(<span class="hljs-params">ex</span>)</span>;<br><br> <span class="hljs-comment">// Propagate exception to caller.</span><br> throw ex;<br> &#125;<br><br>      finally &#123;<br>         <span class="hljs-comment">// Reset common introspection caches in Spring&#x27;s core, since we</span><br> <span class="hljs-comment">// might not ever need metadata for singleton beans anymore...</span><br> reset<span class="hljs-constructor">CommonCaches()</span>;<br> &#125;<br>   &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>以上最核心的方法莫过于invokeBeanFactoryPostProcessors和finishBeanFactoryInitialization我们先来说一说invokeBeanFactoryPostProcessors</p>
+<p>,通过源码可知,先从bean工厂中获取到实现了BeanDefinitionRegistryPostProcessor的类，在依依按照优先级的顺序逐个执行，debug我们可得知在此方法中会获取到开始我们注册读取器是预先注入的后置处理器中的internalConfigurationAnnotationProcessor，它最优先执行，并解析配置文件中的注解将我们配置的bean填充到bean定义中.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -415,9 +426,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/20/%E6%A1%86%E6%9E%B6/spring%E4%BA%8B%E5%8A%A1/" title="Spring事务">
+                      <a href="/2022/07/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="计算机操作系统">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Spring事务</span>
+                        <span class="hidden-mobile">计算机操作系统</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
