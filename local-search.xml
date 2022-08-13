@@ -4,11 +4,61 @@
   
   
   <entry>
+    <title>计算机网络</title>
+    <link href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    <url>/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</url>
+    
+    <content type="html"><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><h2 id="Tcp-x2F-IP网络模型有哪几层"><a href="#Tcp-x2F-IP网络模型有哪几层" class="headerlink" title="Tcp&#x2F;IP网络模型有哪几层"></a>Tcp&#x2F;IP网络模型有哪几层</h2><h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><h3 id="网络接口层"><a href="#网络接口层" class="headerlink" title="网络接口层"></a>网络接口层</h3>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>计算机网络</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Redis底层结构</title>
+    <link href="/2022/08/09/%E7%BC%93%E5%AD%98/Redis%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/"/>
+    <url>/2022/08/09/%E7%BC%93%E5%AD%98/Redis%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="Redis常见数据类型和应用场景"><a href="#Redis常见数据类型和应用场景" class="headerlink" title="Redis常见数据类型和应用场景"></a>Redis常见数据类型和应用场景</h2><h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>String是最基本的key-value结构,key是唯一标志,value是具体的值,value其实不仅是字符串， 也可以是数字（整数或浮点数），value 最多可以容纳的数据长度是 <code>512M</code>。</p><h4 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h4><p>String的底层数据结构实现主要是SDS和int,SDS是用C语言封装的一个类,它相较于C语言的字符串有以下不同</p><ul><li><p><strong>SDS不仅可以保存文本数据还可以保存二进制数据</strong></p></li><li><p><strong>SDS获取字符串的复杂度为O（1）</strong>。c语言的字符串并不会记录自己的长度,SDS用len属性记录了字符串长度，所以复杂度为O（1）</p></li><li><p><strong>Redis 的 SDS API 是安全的，拼接字符串不会造成缓冲区溢出</strong>。因为 SDS 在拼接字符串之前会检查 SDS 空间是否满足要求，如果空间不够会自动扩容，所以不会导致缓冲区溢出的问题</p></li></ul><h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><ul><li><p>储存对象</p></li><li><p>常规计算</p></li><li><p>分布式锁</p></li></ul><h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><h4 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h4><p>List是简单的字符串列表，按照插入顺序排序，可以从头部或尾部插入元素</p><h4 id="内部实现-1"><a href="#内部实现-1" class="headerlink" title="内部实现"></a>内部实现</h4><p>List类型的底层数据结构是由<code>&lt;mark&gt;双向链表或压缩列表&lt;/mark&gt;</code>实现的</p><ul><li><p>如果列表的元素个数小于512个,列表每个元素的值都小于64字节，Redis会使用压缩列表作为List类型的底层数据结构</p></li><li><p>如果不满足以上的条件,Redis使用双向链表</p></li></ul><p>在Redis3.2之后,List底层结构就只由quicklist实现了，取消了双向链表和压缩列表</p><h4 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h4><ul><li>消息队列</li></ul><h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><h4 id="介绍-2"><a href="#介绍-2" class="headerlink" title="介绍"></a>介绍</h4><p>Hash是一个键值对集合,其中Value的形式如：value&#x3D;[{field1,value1},{field2,value2}].Hash特别适合用于存储对象。</p><h4 id="内部实现-2"><a href="#内部实现-2" class="headerlink" title="内部实现"></a>内部实现</h4><p>Hash类型的底层结构是由<mark>Hash表或压缩列表</mark>实现的：</p><ul><li><p>如果hash类型元素个数小于512个，所有值小于64字节，Hash采用压缩列表作为底层结构</p></li><li><p>不满足，则使用Hash表作为底层结构</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Redis</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>计算机操作系统</title>
     <link href="/2022/08/01/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     <url>/2022/08/01/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</url>
     
-    <content type="html"><![CDATA[<h1 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h1><h2 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h2><h3 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h3><p>计算机是由各种外部硬件设备组成的,比如内存、cpu、硬件,如果每个应用程序都要和这些硬件设备对接通信协议,这样太过于繁琐,所以出现了内核这个中间人.<mark>让内核作为应用程序和硬件设备的</mark>,这样应用设备程序只需要关心与内核交互,不用关心硬件的细节.</p><blockquote><p>内核有哪些能力?</p></blockquote><p>现代的操作系统,内核一般会提供四个基本能力:</p><ul><li><p>管理进程、线程,决定哪个进程、线程使用CPU,也就是进程调度的能力</p></li><li><p>管理内存,决定内存的分配和回收</p></li><li><p>管理硬件设备,为进程与硬件设备之间提供通信能力</p></li><li><p>提供系统调用,如果应用程序要运行更高权限运行的服务，那么就需要有系统调用，它是用户程序与操作系统之间的接口。</p></li></ul><blockquote><p>内核是怎么工作的?</p></blockquote><p>内核具有很高的权限,它可以控制CPU、内存、硬件等硬件,儿应用程序的权限很低,因此大部分操作系统把内存分为两个区域:</p><ul><li><p>内核空间:这个内存空间只有内核程序可以访问</p></li><li><p>用户空间:这个内存空间专门给应用程序使用</p></li></ul><p>用户空间的代码只能访问一个局部的内存空间，而内核空间的代码可以访问所有内存空间。因此，当程序使用用户空间时，我们常说该程序在<strong>用户态</strong>执行，而当程序使内核空间时，程序则在<strong>内核态</strong>执行。</p><p>应用程序如果需要进入内核空间，就需要通过系统调用，下面来看看系统调用的过程：</p><img src="/img/imgs/systemcall.png"><p>内核程序执行在内核态，用户程序执行在用户态。当应用程序使用系统调用时，会产生一个中断。发生中断后， CPU 会中断当前在执行的用户程序，转而跳转到中断处理程序，也就是开始执行内核程序。内核处理完后，主动触发中断，把 CPU 执行权限交回给用户程序，回到用户态继续工作。</p><h3 id="LINUX的设计"><a href="#LINUX的设计" class="headerlink" title="LINUX的设计"></a>LINUX的设计</h3><p>Linux内核设计的理念主要有以下几点:</p><ul><li><p>MultiTask:多任务</p><ul><li><p>并行、并发的能力</p><ul><li><p>单核CPU下:让每个线程执行一小段时间,切换到下一个线程.在宏观下一段时间内执行了多个任务,这被称为并发.</p></li><li><p>多核CPU,多个任务被不同CPU核心同时执行</p></li></ul></li></ul></li><li><p>SMP:对称多处理</p><ul><li>代表每个CPU的地位是相同的,多个CPU共享同一个内存,每个CPU都可以访问完整的内存和硬件资源</li></ul></li><li><p>ELF:可执行文件链接格式</p><ul><li>可执行文件的存储格式</li></ul></li><li><p>Monolithic Kernel:宏内核</p><ul><li><p>宏内核的特征是系统内核的所有模块，比如进程调度、内存管理、文件系统、设备驱动等，都运行在内核态。</p></li><li><p>与宏内核相反的是**<mark>微内核</mark>**，微内核架构的内核只保留最基本的能力，比如进程调度、虚拟机内存、中断等，把一些应用放到了用户空间，比如驱动程序、文件系统等。这样服务与服务之间是隔离的，单个服务出现故障或者完全攻击，也不会导致整个操作系统挂掉，提高了操作系统的稳定性和可靠性。</p></li><li><p>还有一种内核叫<strong>混合类型内核</strong>，它的架构有点像微内核，内核里面会有一个最小版本的内核，然后其他模块会在这个基础上搭建，然后实现的时候会跟宏内核类似，也就是把整个内核做成一个完整的程序，大部分服务都在内核中，这就像是宏内核的方式包裹着一个微内核。</p></li></ul></li></ul><h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><h3 id="为什么要有虚拟内存"><a href="#为什么要有虚拟内存" class="headerlink" title="为什么要有虚拟内存"></a>为什么要有虚拟内存</h3><h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>了解虚拟内存之前,我们先认识一下什么是物理内存.</p><p>所谓物理内存就是:内存中的地址,如过直接操作物理内存的话,那么像在内存中同时运行两个程序是不可能的,如果它们同时操作内存值为2000的值那么第一个操作完后第二个将会擦掉上一个储存的所有数据.</p><blockquote><p>操作系统如何解决这个问题?</p></blockquote><p>让操作系统为每一个进程分配独立的一套虚拟地址,人人都有,大家玩自己的地址就行,互补干涉.</p><p>注:操作系统会提供一种机制,将不同进程的虚拟地址和不同内存的物理地址映射起来.</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h1><h2 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h2><h3 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h3><p>计算机是由各种外部硬件设备组成的,比如内存、cpu、硬件,如果每个应用程序都要和这些硬件设备对接通信协议,这样太过于繁琐,所以出现了内核这个中间人.<mark>让内核作为应用程序和硬件设备的</mark>,这样应用设备程序只需要关心与内核交互,不用关心硬件的细节.</p><blockquote><p>内核有哪些能力?</p></blockquote><p>现代的操作系统,内核一般会提供四个基本能力:</p><ul><li><p>管理进程、线程,决定哪个进程、线程使用CPU,也就是进程调度的能力</p></li><li><p>管理内存,决定内存的分配和回收</p></li><li><p>管理硬件设备,为进程与硬件设备之间提供通信能力</p></li><li><p>提供系统调用,如果应用程序要运行更高权限运行的服务，那么就需要有系统调用，它是用户程序与操作系统之间的接口。</p></li></ul><blockquote><p>内核是怎么工作的?</p></blockquote><p>内核具有很高的权限,它可以控制CPU、内存、硬件等硬件,儿应用程序的权限很低,因此大部分操作系统把内存分为两个区域:</p><ul><li><p>内核空间:这个内存空间只有内核程序可以访问</p></li><li><p>用户空间:这个内存空间专门给应用程序使用</p></li></ul><p>用户空间的代码只能访问一个局部的内存空间，而内核空间的代码可以访问所有内存空间。因此，当程序使用用户空间时，我们常说该程序在<strong>用户态</strong>执行，而当程序使内核空间时，程序则在<strong>内核态</strong>执行。</p><p>应用程序如果需要进入内核空间，就需要通过系统调用，下面来看看系统调用的过程：</p><img src="/img/imgs/systemcall.png"><p>内核程序执行在内核态，用户程序执行在用户态。当应用程序使用系统调用时，会产生一个中断。发生中断后， CPU 会中断当前在执行的用户程序，转而跳转到中断处理程序，也就是开始执行内核程序。内核处理完后，主动触发中断，把 CPU 执行权限交回给用户程序，回到用户态继续工作。</p><h3 id="LINUX的设计"><a href="#LINUX的设计" class="headerlink" title="LINUX的设计"></a>LINUX的设计</h3><p>Linux内核设计的理念主要有以下几点:</p><ul><li><p>MultiTask:多任务</p><ul><li><p>并行、并发的能力</p><ul><li><p>单核CPU下:让每个线程执行一小段时间,切换到下一个线程.在宏观下一段时间内执行了多个任务,这被称为并发.</p></li><li><p>多核CPU,多个任务被不同CPU核心同时执行</p></li></ul></li></ul></li><li><p>SMP:对称多处理</p><ul><li>代表每个CPU的地位是相同的,多个CPU共享同一个内存,每个CPU都可以访问完整的内存和硬件资源</li></ul></li><li><p>ELF:可执行文件链接格式</p><ul><li>可执行文件的存储格式</li></ul></li><li><p>Monolithic Kernel:宏内核</p><ul><li><p>宏内核的特征是系统内核的所有模块，比如进程调度、内存管理、文件系统、设备驱动等，都运行在内核态。</p></li><li><p>与宏内核相反的是**<mark>微内核</mark>**，微内核架构的内核只保留最基本的能力，比如进程调度、虚拟机内存、中断等，把一些应用放到了用户空间，比如驱动程序、文件系统等。这样服务与服务之间是隔离的，单个服务出现故障或者完全攻击，也不会导致整个操作系统挂掉，提高了操作系统的稳定性和可靠性。</p></li><li><p>还有一种内核叫<strong>混合类型内核</strong>，它的架构有点像微内核，内核里面会有一个最小版本的内核，然后其他模块会在这个基础上搭建，然后实现的时候会跟宏内核类似，也就是把整个内核做成一个完整的程序，大部分服务都在内核中，这就像是宏内核的方式包裹着一个微内核。</p></li></ul></li></ul><h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><h3 id="为什么要有虚拟内存"><a href="#为什么要有虚拟内存" class="headerlink" title="为什么要有虚拟内存"></a>为什么要有虚拟内存</h3><h4 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h4><p>了解虚拟内存之前,我们先认识一下什么是物理内存.</p><p>所谓物理内存就是:内存中的地址,如过直接操作物理内存的话,那么像在内存中同时运行两个程序是不可能的,如果它们同时操作内存值为2000的值那么第一个操作完后第二个将会擦掉上一个储存的所有数据.</p><blockquote><p>操作系统如何解决这个问题?</p></blockquote><p>让操作系统为每一个进程分配独立的一套虚拟地址,人人都有,大家玩自己的地址就行,互补干涉.</p><p><mark>注:操作系统会提供一种机制,将不同进程的虚拟地址和不同内存的物理地址映射起来.</mark></p><p>如果程序要访问虚拟地址的时候,由操作系统转换成不同的物理地址,这样不同的进程运行的时候,写入的是不同的物理地址,这样就不会冲突了.</p><p>于是,这里就引出了两种地址的概念:</p><ul><li><p>我们程序所使用的内存地址叫做<mark>虚拟内存地址</mark></p></li><li><p>实际存在硬件里面的空间地址叫<mark>物理内存地址</mark></p></li></ul><p>操作系统引入了虚拟内存，进程持有的虚拟地址会通过 CPU 芯片中的内存管理单元（MMU）的映射关系，来转换变成物理地址，然后再通过物理地址访问内存</p><blockquote><p>操作系统是如何管理虚拟地址与物理地址之间的关系？</p></blockquote><ul><li><p>内存分段</p></li><li><p>内存分页</p></li></ul><h4 id="内存分段"><a href="#内存分段" class="headerlink" title="内存分段"></a>内存分段</h4><p>程序是由若干个逻辑分段组成的,如可由代码分段、数据分段、栈段、堆段组成.<mark>不同的段是由不同的属性的,所以就用分段的形式把这些分离出来</mark>.</p><blockquote><p>分段机制下,虚拟地址和物理地址是如何映射的?</p></blockquote><p>分段机制下的虚拟地址由两部分组成,<mark>段选择因子</mark>和<mark>段内偏移量</mark></p><p>段选择因子和段内偏移量：</p><ul><li><p>段选择因子:</p><ul><li><p>段号：用作段表的索引</p></li><li><p>特权等标志位</p></li></ul></li><li><p>段内偏移量：应该位于0和段界限之间</p></li><li><p>段表：</p><ul><li><p>段内描述符</p><ul><li><p>段基地址：</p></li><li><p>段界限</p></li><li><p>特权级DPL</p></li></ul></li></ul></li></ul>]]></content>
     
     
     <categories>
@@ -96,31 +146,6 @@
     <tags>
       
       <tag>多线程</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Redis底层结构</title>
-    <link href="/2022/07/11/%E7%BC%93%E5%AD%98/redis%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/"/>
-    <url>/2022/07/11/%E7%BC%93%E5%AD%98/redis%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</url>
-    
-    <content type="html"><![CDATA[<p>Redis是一个键值对的数据库，它的key类型是SDS</p><h2 id="SDS"><a href="#SDS" class="headerlink" title="SDS"></a>SDS</h2><p>Redis是由C语言编写的,然后Java并没有采用C语言的原生String作为key的存储结构,而是自己写了一个名叫SDS的类.  它相较于C语言的字符串又有什么独特之处呢.我们先来看看SDS的类结构</p><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">sdshdr</span> &#123;<br>    <span class="hljs-comment">// 记录buf数组中已使用字节的数量</span><br>    <span class="hljs-comment">// 等于SDS所保存字符串的长度</span><br>    <span class="hljs-type">int</span> len;<br>    <span class="hljs-comment">// </span><br>记录buf数组中未使用字节的数量<br>    <span class="hljs-type">int</span> free;<br>    <span class="hljs-comment">// </span><br>字节数组，用于保存字符串<br>    <span class="hljs-type">char</span> buf[];<br>&#125;;<br></code></pre></td></tr></table></figure><ol><li><p>熟悉C语言的大家都知道,C的字符串就是char数组，SDS相较于它定义了字节的使用长度、数组未使用字节的数量，降低了获取字符串长度的复杂性</p></li><li><p>减少开销.C的字符串满了之后都会进行扩容,Redis有一套自己的扩容机制可以减少这种开销</p><ul><li><p>在长度小于1MB的情况下：如果进行修改之后，SDS的len将变成13字节，那么程序也会分配13字节的未使用空间，SDS的buf数组的实际长度将变成13+13+1&#x3D;27字节（额外的一字节用于保存空字符）</p></li><li><p>在长度大于1MB：举个例子，如果进行修改之后，SDS的len将变成30MB，那么程序会分配1MB的未使用空间，SDS的buf数组的实际长度将为30MB+1MB+1字节</p></li></ul></li></ol><h2 id="Dict"><a href="#Dict" class="headerlink" title="Dict"></a>Dict</h2><p>字典，又称为符号表（symbol table）、关联数组（associative array）或映射（map），是一种用于保存键值对（key-value pair）的抽象数据结构。</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs awk">typedef struct dict &#123;<br>    <span class="hljs-regexp">//</span> 类型特定函数<br>    dictType *type;<br>    <span class="hljs-regexp">//</span> 私有数据<br>    void *privdata;<br>    <span class="hljs-regexp">//</span> 哈希表<br>    dictht ht[<span class="hljs-number">2</span>]; <span class="hljs-regexp">//</span>之所以有两个,为了方便扩容<br>    rehash<br>    <span class="hljs-regexp">//</span>当rehash不在进行时，值为-<span class="hljs-number">1</span><br>    <span class="hljs-keyword">in</span> trehashidx; <span class="hljs-regexp">/* rehashing not in progress if rehashidx == -1 */</span><br>&#125; dict;<br></code></pre></td></tr></table></figure><p>Redis字典所使用的哈希表结构如下：类似Java的hashMap底层结构数组+链表</p><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">dictht</span> &#123;<br>    <span class="hljs-comment">// 哈希表数组</span><br>    dictEntry **table;  <br>    <span class="hljs-comment">// </span><br>哈希表大小<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> size;<br>    <span class="hljs-comment">//</span><br>哈希表大小掩码，用于计算索引值<br>    <span class="hljs-comment">//</span><br>总是等于size<span class="hljs-number">-1</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> sizemask;<br>    <span class="hljs-comment">// </span><br>该哈希表已有节点的数量<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> used;<br>&#125; dictht;<br></code></pre></td></tr></table></figure><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs fsharp">typedef <span class="hljs-keyword">struct</span> <span class="hljs-keyword">dictEntry</span> &#123;<br>    <span class="hljs-comment">// 键</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-operator">*</span>key;<br>    <span class="hljs-comment">// 值</span><br>    <span class="hljs-keyword">union</span>&#123;<br>        <span class="hljs-keyword">void</span> <span class="hljs-operator">*</span><span class="hljs-keyword">val</span>;<br>        uint64_tu64;<br>        int64_ts64;<br>    &#125; v;<br>    <span class="hljs-comment">// 指向下个哈希表节点，形成链表</span><br>    <span class="hljs-keyword">struct</span> dictEntry <span class="hljs-operator">*</span>next;<br>&#125; dictEntry;<br></code></pre></td></tr></table></figure><p>Redis中的数据库类结构如下：</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">typedef struct redisDb &#123;<br>    dict *dict;                 <span class="hljs-regexp">/* The keyspace for this DB */</span> <span class="hljs-regexp">//</span> 保存了当前数据库的键空间<br>    dict *expires;              <span class="hljs-regexp">/* Timeout of keys with a timeout set */</span> <span class="hljs-regexp">//</span>键空间中所有键的过期时间<br>    dict *blocking_keys;        <span class="hljs-regexp">/**阻塞队列的一些处理**/</span><br><span class="hljs-regexp">//</span> ...<br>    int id;                     <span class="hljs-regexp">/* Database ID  从0开始 */</span> 第一个数据库<br><span class="hljs-regexp">//</span> ...<br>&#125; redisDb;<br></code></pre></td></tr></table></figure><h2 id="五种类型的底层结构"><a href="#五种类型的底层结构" class="headerlink" title="五种类型的底层结构"></a>五种类型的底层结构</h2><p>待完善…………………………………………………………………………………………………………………………………………….</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Redis</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Redis</tag>
       
     </tags>
     

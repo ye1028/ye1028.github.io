@@ -16,15 +16,15 @@
   <meta name="author" content="ye">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Redis是一个键值对的数据库，它的key类型是SDS SDSRedis是由C语言编写的,然后Java并没有采用C语言的原生String作为key的存储结构,而是自己写了一个名叫SDS的类.  它相较于C语言的字符串又有什么独特之处呢.我们先来看看SDS的类结构 1234567891011struct sdshdr &amp;#123;    &#x2F;&#x2F; 记录buf数组中已使用字节的数量    &#x2F;&#x2F; 等于SDS">
+    <meta name="description" content="RedisRedis常见数据类型和应用场景String介绍String是最基本的key-value结构,key是唯一标志,value是具体的值,value其实不仅是字符串， 也可以是数字（整数或浮点数），value 最多可以容纳的数据长度是 512M。 内部实现String的底层数据结构实现主要是SDS和int,SDS是用C语言封装的一个类,它相较于C语言的字符串有以下不同  SDS不仅可以保存文">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis底层结构">
-<meta property="og:url" content="http://example.com/2022/07/11/%E7%BC%93%E5%AD%98/redis%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:url" content="http://example.com/2022/08/09/%E7%BC%93%E5%AD%98/Redis%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/index.html">
 <meta property="og:site_name" content="葉">
-<meta property="og:description" content="Redis是一个键值对的数据库，它的key类型是SDS SDSRedis是由C语言编写的,然后Java并没有采用C语言的原生String作为key的存储结构,而是自己写了一个名叫SDS的类.  它相较于C语言的字符串又有什么独特之处呢.我们先来看看SDS的类结构 1234567891011struct sdshdr &amp;#123;    &#x2F;&#x2F; 记录buf数组中已使用字节的数量    &#x2F;&#x2F; 等于SDS">
+<meta property="og:description" content="RedisRedis常见数据类型和应用场景String介绍String是最基本的key-value结构,key是唯一标志,value是具体的值,value其实不仅是字符串， 也可以是数字（整数或浮点数），value 最多可以容纳的数据长度是 512M。 内部实现String的底层数据结构实现主要是SDS和int,SDS是用C语言封装的一个类,它相较于C语言的字符串有以下不同  SDS不仅可以保存文">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-07-11T01:18:44.567Z">
-<meta property="article:modified_time" content="2022-07-11T07:52:53.719Z">
+<meta property="article:published_time" content="2022-08-09T01:52:18.927Z">
+<meta property="article:modified_time" content="2022-08-13T08:54:09.421Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
@@ -207,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-07-11 09:18" pubdate>
-          2022年7月11日 上午
+        <time datetime="2022-08-09 09:52" pubdate>
+          2022年8月9日 上午
         </time>
       </span>
     
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          792 字
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          13 分钟
+          7 分钟
         
       </span>
     
@@ -273,7 +273,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月11日 下午
+                    本文最后更新于：2022年8月13日 下午
                   
                 
               </p>
@@ -281,36 +281,44 @@
             
               <div class="markdown-body">
                 
-                <p>Redis是一个键值对的数据库，它的key类型是SDS</p>
-<h2 id="SDS"><a href="#SDS" class="headerlink" title="SDS"></a>SDS</h2><p>Redis是由C语言编写的,然后Java并没有采用C语言的原生String作为key的存储结构,而是自己写了一个名叫SDS的类.  它相较于C语言的字符串又有什么独特之处呢.我们先来看看SDS的类结构</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">sdshdr</span> &#123;<br>    <span class="hljs-comment">// 记录buf数组中已使用字节的数量</span><br>    <span class="hljs-comment">// 等于SDS所保存字符串的长度</span><br>    <span class="hljs-type">int</span> len;<br>    <span class="hljs-comment">// </span><br>记录buf数组中未使用字节的数量<br>    <span class="hljs-type">int</span> free;<br>    <span class="hljs-comment">// </span><br>字节数组，用于保存字符串<br>    <span class="hljs-type">char</span> buf[];<br>&#125;;<br></code></pre></td></tr></table></figure>
-
-<ol>
-<li><p>熟悉C语言的大家都知道,C的字符串就是char数组，SDS相较于它定义了字节的使用长度、数组未使用字节的数量，降低了获取字符串长度的复杂性</p>
-</li>
-<li><p>减少开销.C的字符串满了之后都会进行扩容,Redis有一套自己的扩容机制可以减少这种开销</p>
+                <h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="Redis常见数据类型和应用场景"><a href="#Redis常见数据类型和应用场景" class="headerlink" title="Redis常见数据类型和应用场景"></a>Redis常见数据类型和应用场景</h2><h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>String是最基本的key-value结构,key是唯一标志,value是具体的值,value其实不仅是字符串， 也可以是数字（整数或浮点数），value 最多可以容纳的数据长度是 <code>512M</code>。</p>
+<h4 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h4><p>String的底层数据结构实现主要是SDS和int,SDS是用C语言封装的一个类,它相较于C语言的字符串有以下不同</p>
 <ul>
-<li><p>在长度小于1MB的情况下：如果进行修改之后，SDS的len将变成13字节，那么程序也会分配13字节的未使用空间，SDS的buf数组的实际长度将变成13+13+1&#x3D;27字节（额外的一字节用于保存空字符）</p>
+<li><p><strong>SDS不仅可以保存文本数据还可以保存二进制数据</strong></p>
 </li>
-<li><p>在长度大于1MB：举个例子，如果进行修改之后，SDS的len将变成30MB，那么程序会分配1MB的未使用空间，SDS的buf数组的实际长度将为30MB+1MB+1字节</p>
+<li><p><strong>SDS获取字符串的复杂度为O（1）</strong>。c语言的字符串并不会记录自己的长度,SDS用len属性记录了字符串长度，所以复杂度为O（1）</p>
+</li>
+<li><p><strong>Redis 的 SDS API 是安全的，拼接字符串不会造成缓冲区溢出</strong>。因为 SDS 在拼接字符串之前会检查 SDS 空间是否满足要求，如果空间不够会自动扩容，所以不会导致缓冲区溢出的问题</p>
 </li>
 </ul>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><ul>
+<li><p>储存对象</p>
 </li>
-</ol>
-<h2 id="Dict"><a href="#Dict" class="headerlink" title="Dict"></a>Dict</h2><p>字典，又称为符号表（symbol table）、关联数组（associative array）或映射（map），是一种用于保存键值对（key-value pair）的抽象数据结构。</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs awk">typedef struct dict &#123;<br>    <span class="hljs-regexp">//</span> 类型特定函数<br>    dictType *type;<br>    <span class="hljs-regexp">//</span> 私有数据<br>    void *privdata;<br>    <span class="hljs-regexp">//</span> 哈希表<br>    dictht ht[<span class="hljs-number">2</span>]; <span class="hljs-regexp">//</span>之所以有两个,为了方便扩容<br>    rehash<br>    <span class="hljs-regexp">//</span>当rehash不在进行时，值为-<span class="hljs-number">1</span><br>    <span class="hljs-keyword">in</span> trehashidx; <span class="hljs-regexp">/* rehashing not in progress if rehashidx == -1 */</span><br>&#125; dict;<br></code></pre></td></tr></table></figure>
-
-<p>Redis字典所使用的哈希表结构如下：类似Java的hashMap底层结构数组+链表</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">dictht</span> &#123;<br>    <span class="hljs-comment">// 哈希表数组</span><br>    dictEntry **table;  <br>    <span class="hljs-comment">// </span><br>哈希表大小<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> size;<br>    <span class="hljs-comment">//</span><br>哈希表大小掩码，用于计算索引值<br>    <span class="hljs-comment">//</span><br>总是等于size<span class="hljs-number">-1</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> sizemask;<br>    <span class="hljs-comment">// </span><br>该哈希表已有节点的数量<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> used;<br>&#125; dictht;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs fsharp">typedef <span class="hljs-keyword">struct</span> <span class="hljs-keyword">dictEntry</span> &#123;<br>    <span class="hljs-comment">// 键</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-operator">*</span>key;<br>    <span class="hljs-comment">// 值</span><br>    <span class="hljs-keyword">union</span>&#123;<br>        <span class="hljs-keyword">void</span> <span class="hljs-operator">*</span><span class="hljs-keyword">val</span>;<br>        uint64_tu64;<br>        int64_ts64;<br>    &#125; v;<br>    <span class="hljs-comment">// 指向下个哈希表节点，形成链表</span><br>    <span class="hljs-keyword">struct</span> dictEntry <span class="hljs-operator">*</span>next;<br>&#125; dictEntry;<br></code></pre></td></tr></table></figure>
-
-
-
-<p>Redis中的数据库类结构如下：</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">typedef struct redisDb &#123;<br>    dict *dict;                 <span class="hljs-regexp">/* The keyspace for this DB */</span> <span class="hljs-regexp">//</span> 保存了当前数据库的键空间<br>    dict *expires;              <span class="hljs-regexp">/* Timeout of keys with a timeout set */</span> <span class="hljs-regexp">//</span>键空间中所有键的过期时间<br>    dict *blocking_keys;        <span class="hljs-regexp">/**阻塞队列的一些处理**/</span><br><span class="hljs-regexp">//</span> ...<br>    int id;                     <span class="hljs-regexp">/* Database ID  从0开始 */</span> 第一个数据库<br><span class="hljs-regexp">//</span> ...<br>&#125; redisDb;<br></code></pre></td></tr></table></figure>
-
-<h2 id="五种类型的底层结构"><a href="#五种类型的底层结构" class="headerlink" title="五种类型的底层结构"></a>五种类型的底层结构</h2><p>待完善…………………………………………………………………………………………………………………………………………….</p>
+<li><p>常规计算</p>
+</li>
+<li><p>分布式锁</p>
+</li>
+</ul>
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><h4 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h4><p>List是简单的字符串列表，按照插入顺序排序，可以从头部或尾部插入元素</p>
+<h4 id="内部实现-1"><a href="#内部实现-1" class="headerlink" title="内部实现"></a>内部实现</h4><p>List类型的底层数据结构是由<code>&lt;mark&gt;双向链表或压缩列表&lt;/mark&gt;</code>实现的</p>
+<ul>
+<li><p>如果列表的元素个数小于512个,列表每个元素的值都小于64字节，Redis会使用压缩列表作为List类型的底层数据结构</p>
+</li>
+<li><p>如果不满足以上的条件,Redis使用双向链表</p>
+</li>
+</ul>
+<p>在Redis3.2之后,List底层结构就只由quicklist实现了，取消了双向链表和压缩列表</p>
+<h4 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h4><ul>
+<li>消息队列</li>
+</ul>
+<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><h4 id="介绍-2"><a href="#介绍-2" class="headerlink" title="介绍"></a>介绍</h4><p>Hash是一个键值对集合,其中Value的形式如：value&#x3D;[{field1,value1},{field2,value2}].Hash特别适合用于存储对象。</p>
+<h4 id="内部实现-2"><a href="#内部实现-2" class="headerlink" title="内部实现"></a>内部实现</h4><p>Hash类型的底层结构是由<mark>Hash表或压缩列表</mark>实现的：</p>
+<ul>
+<li><p>如果hash类型元素个数小于512个，所有值小于64字节，Hash采用压缩列表作为底层结构</p>
+</li>
+<li><p>不满足，则使用Hash表作为底层结构</p>
+</li>
+</ul>
 
                 
               </div>
@@ -357,7 +365,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Redis底层结构</div>
-      <div>http://example.com/2022/07/11/缓存/redis底层结构/</div>
+      <div>http://example.com/2022/08/09/缓存/Redis底层结构/</div>
     </div>
     <div class="license-meta">
       
@@ -369,7 +377,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年7月11日</div>
+          <div>2022年8月9日</div>
         </div>
       
       
@@ -399,9 +407,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/12/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%B9%B6%E5%8F%91%E7%AF%87%E6%80%BB%E7%BB%93/" title="并发篇">
+                      <a href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="计算机网络">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">并发篇</span>
+                        <span class="hidden-mobile">计算机网络</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -409,8 +417,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/07/09/%E7%BC%93%E5%AD%98/RedisCluster/" title="RedisCluster">
-                        <span class="hidden-mobile">RedisCluster</span>
+                      <a href="/2022/08/01/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="计算机操作系统">
+                        <span class="hidden-mobile">计算机操作系统</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
