@@ -27,7 +27,7 @@
 <meta property="og:image" content="http://example.com/2022/08/17/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%BB%E7%BB%93/imgs/img/语法错误.png">
 <meta property="og:image" content="http://example.com/2022/08/17/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%BB%E7%BB%93/img/imgs/索引分类.png">
 <meta property="article:published_time" content="2022-08-17T07:01:42.832Z">
-<meta property="article:modified_time" content="2022-08-22T10:03:43.085Z">
+<meta property="article:modified_time" content="2022-08-23T06:14:11.286Z">
 <meta property="article:author" content="ye">
 <meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.6k 字
+          6.5k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          47 分钟
+          54 分钟
         
       </span>
     
@@ -277,7 +277,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年8月22日 晚上
+                    本文最后更新于：2022年8月23日 下午
                   
                 
               </p>
@@ -514,7 +514,41 @@
 <li><strong>redo log（重做日志）</strong>：是 Innodb 存储引擎层生成的日志，实现了事务中的<strong>持久性</strong>，主要<strong>用于掉电等故障恢复</strong>；</li>
 <li><strong>binlog （归档日志）</strong>：是 Server 层生成的日志，主要<strong>用于数据备份和主从复制</strong>；</li>
 </ul>
-<h3 id="为什么需要-undo-log？"><a href="#为什么需要-undo-log？" class="headerlink" title="为什么需要 undo log？"></a>为什么需要 undo log？</h3>
+<h3 id="为什么需要-undo-log？"><a href="#为什么需要-undo-log？" class="headerlink" title="为什么需要 undo log？"></a>为什么需要 undo log？</h3><p>    如果我们每次在事务执行的过程中，都记录下回滚时需要的信息到一个日志里，那么在事务执行中途发生了MySql崩溃后，就不用担心无法回滚到事务之前的数据</p>
+<p>实现这一个机制就是 undo log（回滚日志），它保证了事务中的原子性</p>
+<p>undo log是一个撤退回退的日志，在事务没有提交之前，Mysql会先记录更新前的数据到Undo log日志文件里面，回滚之后，可以利用undo log来进行回退</p>
+<blockquote>
+<p>如何进行操作的</p>
+</blockquote>
+<ul>
+<li><p>在插入一条数据时，记录这个数据的id，回滚的时候把这个id对应的数据删除</p>
+</li>
+<li><p>在删除一条数据时，要把这条记录中的内容都记下来,这样之后回滚时再把由这些内容组成的记录插入到表中就好了</p>
+</li>
+<li><p>在更新一条记录时，要把被更新的列的旧值记下来，这样之后回滚时再把这些列更新为旧值就好了。</p>
+</li>
+</ul>
+<p>另外，<strong>undo log 还有一个作用，通过 ReadView + undo log 实现 MVCC（多版本并发控制）</strong>。</p>
+<blockquote>
+<p>undo log的作用</p>
+</blockquote>
+<ol>
+<li><p>实现事务回滚，保障了事务的原子性。事务进行的过程中，如果遇到了错误回滚，可以利用undo log历史记录将数据恢复到事务开始之前的状态</p>
+</li>
+<li><p>实现了MVCC关键因素之一。MVCC是通过ReadView+undo log是实现的</p>
+</li>
+</ol>
+<h3 id="为什么需要Buffer-Pool"><a href="#为什么需要Buffer-Pool" class="headerlink" title="为什么需要Buffer Pool?"></a>为什么需要Buffer Pool?</h3><p>Mysql的数据都是存在磁盘当中的，当我们要更新一条记录时，得先从磁盘中读取该记录，然后在内存中修改这条记录。修改完这条记录后再写回磁盘。这样的效率极其缓慢。</p>
+<p>因此InnoDB设计了Buffer Pool缓冲池。来提高数据库得读写性能。</p>
+<p>在有Buffer Pool缓存后.</p>
+<ul>
+<li><p>当读取数据时，如果数据存在于BufferPool中，客户端会直接从Buffer Pool中获取，否则则取磁盘中获取</p>
+</li>
+<li><p>当修改数据时，如果数据存在啊Buffer Pool中，直接修改内存中得数据，然后将其设为脏页（该页得内存数据和磁盘上得数据不一致），为了减少磁盘I&#x2F;O，不会立刻将脏页写入磁盘，后续由后台线程找到一个适合得时机写入回去</p>
+</li>
+</ul>
+<h3 id="Buffer-Pool-缓存什么？"><a href="#Buffer-Pool-缓存什么？" class="headerlink" title="Buffer Pool 缓存什么？"></a>Buffer Pool 缓存什么？</h3><p>在Mysql启动得时候，InnDB会为Buffer Pool申请一片连续得内存空间，然后按照默认得16kb得大小划分出一个个得页，Buffer Pool中得页就叫做缓存页。</p>
+
                 
               </div>
             
@@ -532,7 +566,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Redis/" class="category-chain-item">Redis</a>
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
   
   
 
@@ -606,8 +640,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/08/17/%E9%9A%8F%E7%AC%94/%E4%B8%8D%E8%A6%81%E5%BC%82%E6%AD%A5%E7%BA%BF%E7%A8%8B%E4%B8%AD%E8%8E%B7%E5%8F%96request/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="计算机网络">
+                        <span class="hidden-mobile">计算机网络</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
