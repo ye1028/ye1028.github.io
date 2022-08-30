@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>RabbitMQ学习笔记</title>
+    <link href="/2022/08/26/%E6%A1%86%E6%9E%B6/RabbitMQ/"/>
+    <url>/2022/08/26/%E6%A1%86%E6%9E%B6/RabbitMQ/</url>
+    
+    <content type="html"><![CDATA[<h1 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h1><h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><h3 id="消息队列模式"><a href="#消息队列模式" class="headerlink" title="消息队列模式"></a>消息队列模式</h3><p>消息队列目前主要两种模式，分别是点对点模式和发布订阅模式。</p><h4 id="点对点模式"><a href="#点对点模式" class="headerlink" title="点对点模式"></a>点对点模式</h4><p>一个具体的消息只能被一个消费者消费，多个生产者可以向同一个消息队列中发送信息，多个消费者消费同一个消息队列。值得注意的是,一个信息在被一个消费者处理的时候，这个信息在队列上会被锁住或者被移除并且其他消费者无法处理该消息。如果处理失败，消息系统一般会把这个信息返回消息队列中，这样其他消费者可以继续消费。</p><h4 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h4><p>单个消息可以被多个订阅者并发的获取和处理。一般来说，订阅有两种模式。</p><ul><li><p>临时(ephemeral)模式：这种订阅只有在消费者启动并运行的时候的才存在，如果推出了相应的订阅已经尚未处理的信息就会取消。</p></li><li><p>持久(durable)模式：这种订阅会一直存在,除非主动去删除。消费者推出后,依旧会维持该订阅，并且后续消息可以被继续处理</p></li></ul><h3 id="衡量标准"><a href="#衡量标准" class="headerlink" title="衡量标准"></a>衡量标准</h3><p>对消息队列进行技术选型时，需要通过以下指标衡量你所选择的消息队列，是否可以满足你的需求   </p><ul><li><p>消息顺序</p></li><li><p>消息路由</p></li><li><p>消息可靠性</p></li><li><p>消息时序</p></li><li><p>容错性</p></li><li><p>伸缩</p></li><li><p>吞吐量</p></li></ul><h2 id="Rabbitmq原理初探"><a href="#Rabbitmq原理初探" class="headerlink" title="Rabbitmq原理初探"></a>Rabbitmq原理初探</h2><p>rabbitmq是使用Erlang语言开发的开源消息队列，基于AMQP协议实现的。</p><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>先了解下AMQP协议中级的几个重要概念</p><ul><li><p>Server:接受客户端的连接，实现AMQP的实体服务</p></li><li><p>Connection：和服务器Server进行Tcp连接</p></li><li><p>Channel:信道，消息读写等操作都是在信道中进行客户端可以建立多个信道，每个信道代表一个会话任务</p></li><li><p>Message:消息，应用程序和服务器之间传送的数据</p></li><li><p>Exchange:交换机，接受信息，按照路由规则将消息路由到一个或多个队列中</p><ul><li>和Queue一样，Exchange也可设置为持久化，临时或者自动删除。</li></ul></li><li><p>Binding：进行交换机和消息队列之间的绑定</p></li><li><p>RoutingKey: 路由规则</p></li><li><p>Queue: 消息队列，用来保存信息，供消费者消费</p><ul><li><p>消息队列提供了FIFO的处理机制，具有缓存消息的能力。Rabbitmq中，队列消息可以设置</p><ul><li><p>设置为持久化的队列，队列中的信息会在server本地硬盘储存一份，防止系统crash,数据丢失</p></li><li><p>设置为临时队列，队列中的数据会在重启之后就会丢失</p></li><li><p>设置为自动删除的队列，当不存在用户连接server，队列中的数据会被自动删除</p></li></ul></li></ul></li></ul><h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>AMQP主要是三个部分组成分别是生产端、服务器、消费端。执行流程如下：</p><ol><li><p>生产者和服务器进行TCP连接，开启一个信道</p></li><li><p>生产者申明交换机和队列，设置相关属性，并通过路由键将交换机和队列进行绑定</p></li><li><p>消费端也需要建立连接，开启信道等操作便于接受信息</p></li><li><p>生产者发送信息，发送到服务端中的虚拟主机</p></li><li><p>虚拟主机中的交换机根据路由键选择路由规则，发送到不同的消息队列中</p></li><li><p>订阅了消息队列的消费者就可以获取到消息，进行消费。</p></li></ol><img src = "\img\imgs\rabbitmq\connection.png"><h3 id="常用交换机"><a href="#常用交换机" class="headerlink" title="常用交换机"></a>常用交换机</h3><p>Rabbitmq常用的交换机类型有以下几类：</p><ul><li><p>Direct Exchange:点对点 一个交换机绑定一个队列</p></li><li><p>Fanout:发布订阅 一个交换机绑定多个队列，交换机接收到信息后会把信息发送给所有队列</p></li><li><p>Topic：主题交换机，这种交换机是使用交换机去匹配。通配符有两种：“*”、“#”。</p><ul><li><p>“#”：有且只匹配一个词</p></li><li><p>“*”：匹配一个或者多个词</p></li></ul></li></ul><h3 id="高级特性"><a href="#高级特性" class="headerlink" title="高级特性"></a>高级特性</h3><h4 id="过期时间"><a href="#过期时间" class="headerlink" title="过期时间"></a>过期时间</h4><p>time to live,也就是生存时间，是一条信息在队列中的最大存活时间，单位是毫秒</p><ul><li><p>Rabbitmq可以对消息和队列设置TTL</p></li><li><p>Rabbitmq支持设置队列的过期时间，从消息入队列开始计算，直到超过了队列的超时时间配置，那么信息会变成死信，自动清除</p></li></ul><h4 id="消息确认"><a href="#消息确认" class="headerlink" title="消息确认"></a>消息确认</h4><p>为了保证信息从队列可靠地到达消费者，RabbitMQ提供了消息确认机制。</p><p>消费者订阅队列的时候，可以指定autoAck参数，当autoAck为true的时候,RabbitMQ采用自动确认模式，RabbitMQ自动把发送出去的罅隙设置为确认，然后从内存或者硬盘中删除，而不管消费者是否消费了这些信息。</p><h4 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h4><p>Rabbitmq通过持久化的方式来保证消息的可靠性。Rabbitmq的吃计划分为三个部分：交换器持久化、队列持久化、消息的持久化</p><p>交换器持久化可以通过在声明队列时将durable参数设置为true，如果不设置的话，那么在服务重启之后，相关的交换器元数据会丢失，不过消息不会丢失，知识不能将消息发送到交换器了。</p><p>设置了队列和消息的持久化，当RabbitMQ服务重启之后，消息依然存在。如果只设置队列持久化或者消息持久化，重启之后消息都会消失。</p><h4 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h4><p>当消息在一个队列中变成死信之后，他能被重新发送到另一个交换器中，这个交换器成为死信交换器，与该交换器绑定的队列称为死信队列。</p><p>消息变成死信有以下几种方式：</p><ul><li><p>消息过期</p></li><li><p>消息被拒绝</p></li><li><p>队列达到最大长度</p></li></ul><p> </p><p>死信队列有什么用？当发生异常时，消息不能被正常消费进入死信队列，后续可以根据内容分析当时发生的异常</p><h4 id="延迟队列"><a href="#延迟队列" class="headerlink" title="延迟队列"></a>延迟队列</h4><p>延迟队列就是进入该队列的信息会被消息这延迟消费。</p><p>延迟队列最常见的场景：用户再下单时在规定时间内支付，如果没有支付，这个订单会自动取消</p><h3 id="特性分析"><a href="#特性分析" class="headerlink" title="特性分析"></a>特性分析</h3><ul><li><p>消息路由（支持）：Rabbitmq可以通过不同的交换器支持不同种类的消息路由</p></li><li><p>消息有序（不支持）：当消费信息时，如果消费失败，消息会被放回队列，然后重新消费，这样会导致消息无序</p></li><li><p>消息时序（好）：通过延时队列，可以指定消息的延时时间，过期时间TTL。</p></li><li><p>容错处理（好）：通过交付重试和死信交换器（DLX）来处理信息处理故障；</p></li><li><p>持久化（不太好）：消费过的信息会被立刻删除</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>RabbitMQ学习笔记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>RabbitMQ学习笔记</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>数据库总结</title>
     <link href="/2022/08/17/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%BB%E7%BB%93/"/>
     <url>/2022/08/17/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%BB%E7%BB%93/</url>
@@ -33,7 +58,7 @@
     <link href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     <url>/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</url>
     
-    <content type="html"><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><h2 id="Tcp-x2F-IP网络模型有哪几层"><a href="#Tcp-x2F-IP网络模型有哪几层" class="headerlink" title="Tcp&#x2F;IP网络模型有哪几层"></a>Tcp&#x2F;IP网络模型有哪几层</h2><h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><h3 id="网络接口层"><a href="#网络接口层" class="headerlink" title="网络接口层"></a>网络接口层</h3>]]></content>
+    <content type="html"><![CDATA[<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><h2 id="Tcp-x2F-IP网络模型有哪几层"><a href="#Tcp-x2F-IP网络模型有哪几层" class="headerlink" title="Tcp&#x2F;IP网络模型有哪几层"></a>Tcp&#x2F;IP网络模型有哪几层</h2><h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><p>应用层是OSI参考模型的最高层，它为用户提供服务，具有网络传输的用户接口功能，主要负责在网络上用户与应用程序或应用程序与应用程序之间的通信。应用层是工作在操作系统的用户态，传输层以下都是在核心态。</p><h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><p>应用层的数据包会传输给传输层，传输层是为应用层提供网络支持的。在传输层中有两个传输协议，分别是TCP和UDP。</p><p>TCP全名是传输控制协议，大部分应用使用的是TCP传输协议比如HTTP应用层协议。TCP相对于UDP多了很多特性，比如流量控制、超时重传、拥塞控制等。这些都是为了保证数据包能可靠地传输给对方。</p><p>UDP相对来说就比较简单，只负责最基本的发送数据包。</p><p>应用传输的数据可能很大，如果超过了MSS（TCP最大报文段长度）,就要将数据包分块，这样即使在传输的过程中有数据丢失或者磨损，直接将相应的重发即可，这样的分块我们叫做TCP段。</p><h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><p>网络层负责帮助实现应用到应用的通信。网络层最常用的是IP协议，IP协议会将传输层的报文作为数据部分，再加上IP包头组成IP报文，如果IP报文大小超过MTU就会再次进行分片，得到一个即将发送到网络的 IP 报文。</p><h3 id="网络接口层"><a href="#网络接口层" class="headerlink" title="网络接口层"></a>网络接口层</h3>]]></content>
     
     
     <categories>
